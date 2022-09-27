@@ -1,5 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
-public class TeleopTest extends FrogOpMode {
+public class TeleopTest{
 
 }
