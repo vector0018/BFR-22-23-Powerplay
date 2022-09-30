@@ -21,9 +21,9 @@ public class TeleopTest2 extends OpMode {
             frontRightMotor = hardwareMap.get(DcMotor.class,"RF");
             frontLeftMotor = hardwareMap.get(DcMotor.class,"LF");
 
+            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
             frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
             backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
             backRightMotor.setDirection(DcMotor.Direction.FORWARD);
         }
 
@@ -58,7 +58,9 @@ public class TeleopTest2 extends OpMode {
                 }
             }
         }
-                    @Override
+
+
+    @Override
                     public void stop (){
                         backLeftMotor.setPower(0);
                         frontLeftMotor.setPower(0);
