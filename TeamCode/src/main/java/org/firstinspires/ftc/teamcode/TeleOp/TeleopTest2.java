@@ -4,8 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Hardware.BFRMecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.Utility.FrogOpMode;
+
 @TeleOp
-public class TeleopTest2 extends OpMode {
+public class TeleopTest2 extends FrogOpMode {
         DcMotor backLeftMotor = null;
         DcMotor backRightMotor = null;
         DcMotor frontRightMotor = null;
@@ -14,17 +18,30 @@ public class TeleopTest2 extends OpMode {
         public double forwardMotorPower = gamepad1.left_stick_y * 0.7;
         public double turnPower = gamepad1.left_stick_x * 0.7;
 
-        @Override
-        public void init() {
-            backLeftMotor = hardwareMap.get(DcMotor.class,"LB");
-            backRightMotor = hardwareMap.get(DcMotor.class,"RB");
-            frontRightMotor = hardwareMap.get(DcMotor.class,"RF");
-            frontLeftMotor = hardwareMap.get(DcMotor.class,"LF");
+    @Override
+    public void initialize() {
+        BFRMecanumDrive drive = RobotHardware.getInstance().drive;
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RobotHardware robot = RobotHardware.getInstance();
 
-            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
-            frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-            backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-            backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        backLeftMotor = hardwareMap.get(DcMotor.class,"LB");
+        backRightMotor = hardwareMap.get(DcMotor.class,"RB");
+        frontRightMotor = hardwareMap.get(DcMotor.class,"RF");
+        frontLeftMotor = hardwareMap.get(DcMotor.class,"LF");
+
+        frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+    }
+
+    @Override
+    public void repeat() {
+
+    }
+/*        @Override
+        public void init() {
+
         }
 
         @Override
@@ -57,11 +74,13 @@ public class TeleopTest2 extends OpMode {
                     frontRightMotor.setPower(turnPower);
                 }
             }
-        }
+        }*/
+
+
 
 
     @Override
-                    public void stop (){
+    public void stop (){
                         backLeftMotor.setPower(0);
                         frontLeftMotor.setPower(0);
                         backRightMotor.setPower(0);
