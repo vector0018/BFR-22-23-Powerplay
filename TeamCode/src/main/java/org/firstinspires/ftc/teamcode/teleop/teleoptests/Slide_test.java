@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop.teleoptests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@TeleOp
 public class Slide_test extends LinearOpMode {
-    @Override
+
     public void runOpMode() throws InterruptedException {
         DcMotor slideMotor = null;
         Servo leftClaw = null;
@@ -27,7 +28,7 @@ public class Slide_test extends LinearOpMode {
                     leftClaw.setPosition(0);
                 }
                 if (gamepad2.right_bumper){
-                    leftClaw.setPosition(0);
+                    rightClaw.setPosition(0);
             }
 
     }
