@@ -16,8 +16,7 @@ public class Slide_test extends LinearOpMode {
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
         leftClaw = hardwareMap.get(Servo.class, "LC");
         rightClaw = hardwareMap.get(Servo.class, "RC");
-
-
+        
 
             waitForStart();
 
