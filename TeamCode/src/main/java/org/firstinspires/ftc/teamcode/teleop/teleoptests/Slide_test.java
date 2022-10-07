@@ -11,7 +11,6 @@ public class Slide_test extends LinearOpMode {
         DcMotor slideMotor = null;
         Servo leftClaw = null;
         Servo rightClaw = null;
-        double slidePower = gamepad2.left_stick_y * 0.7;
 
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
         leftClaw = hardwareMap.get(Servo.class, "LC");
@@ -20,13 +19,14 @@ public class Slide_test extends LinearOpMode {
             waitForStart();
 
             while (opModeIsActive()) {
+                double slidePower = gamepad2.left_stick_y * 0.7;
                 slideMotor.setPower(slidePower);
 
                 if (gamepad2.left_bumper){
-                    leftClaw.setPosition(0);
+                    leftClaw.setPosition(.5);
                 }
                 if (gamepad2.right_bumper){
-                    rightClaw.setPosition(0);
+                    rightClaw.setPosition(.5);
             }
 
     }
