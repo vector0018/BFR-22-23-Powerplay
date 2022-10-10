@@ -32,6 +32,7 @@ public class Slide_test extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
+        leftClaw.setDirection(Servo.Direction.REVERSE);
 
             waitForStart();
 
@@ -64,14 +65,13 @@ public class Slide_test extends LinearOpMode {
                 slideMotor.setPower(slidePower);
 
                 if (gamepad2.left_bumper){
-                    leftClaw.setPosition(-.5);
-                    rightClaw.setPosition(.5);
+                    leftClaw.setPosition(1);
+                    rightClaw.setPosition(0.6);
                 }
-                if (gamepad2.right_bumper){
-                    leftClaw.setPosition(-1);
-                    rightClaw.setPosition(1);
+                if (gamepad2.right_bumper)
+                    leftClaw.setPosition(0.6);
+                    rightClaw.setPosition(0.2);
             }
 
     }
-}
 }
