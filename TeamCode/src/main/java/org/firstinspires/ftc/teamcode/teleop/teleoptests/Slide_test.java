@@ -34,44 +34,49 @@ public class Slide_test extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.REVERSE);
 
-            waitForStart();
+        waitForStart();
 
-            while (opModeIsActive()) {
-                targetPosition += gamepad2.left_stick_y * -0.2;
-                if (targetPosition > maxTargetPosition) {
-                    targetPosition = maxTargetPosition;
-                }
-                if (targetPosition < minTargetPosition) {
-                    targetPosition = minTargetPosition;
-                }
-                currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-                positionError = targetPosition - currentPosition;
-                slidePower = Kp * positionError;
-                telemetry.addData("target position: ", targetPosition);
-                telemetry.addData("position error: " , positionError);
-                telemetry.addData("current position", currentPosition);
-                telemetry.addData("slide power: " , slidePower);
-                telemetry.addData("Zero Position: ", zeroPos);
-                telemetry.addData("Right servo: ", rightClaw.getPosition());
-                telemetry.addData("Left servo: ", leftClaw.getPosition());
-                telemetry.update();
+        while (opModeIsActive()) {
+            targetPosition += gamepad2.left_stick_y * -0.2;
+            if (targetPosition > maxTargetPosition) {
+                targetPosition = maxTargetPosition;
+            }
+            if (targetPosition < minTargetPosition) {
+                targetPosition = minTargetPosition;
+            }
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+            positionError = targetPosition - currentPosition;
+            slidePower = Kp * positionError;
+            telemetry.addData("target position: ", targetPosition);
+            telemetry.addData("position error: ", positionError);
+            telemetry.addData("current position", currentPosition);
+            telemetry.addData("slide power: ", slidePower);
+            telemetry.addData("Zero Position: ", zeroPos);
+            telemetry.addData("Right servo: ", rightClaw.getPosition());
+            telemetry.addData("Left servo: ", leftClaw.getPosition());
+            telemetry.update();
 
-                if (slidePower > 1) {
-                    slidePower = 1;
-                }
-                if (slidePower < -1) {
-                    slidePower = -1;
-                }
-                slideMotor.setPower(slidePower);
+            if (slidePower > 1) {
+                slidePower = 1;
+            }
+            if (slidePower < -1) {
+                slidePower = -1;
+            }
+            slideMotor.setPower(slidePower);
 
-                if (gamepad2.left_bumper){
-                    leftClaw.setPosition(1);
-                    rightClaw.setPosition(0.6);
-                }
-                if (gamepad2.right_bumper)
-                    leftClaw.setPosition(0.6);
-                    rightClaw.setPosition(0.2);
+            if (gamepad2.left_bumper) {
+                leftClaw.setPosition(1);
+            }
+            if (gamepad2.left_bumper) {
+                rightClaw.setPosition(0.7);
+            }
+            if (gamepad2.right_bumper) {
+                rightClaw.setPosition(0.2);
+            }
+            if (gamepad2.right_bumper) {
+                leftClaw.setPosition(0.6);
             }
 
+        }
     }
 }
