@@ -37,16 +37,25 @@ public class Slide_test extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            // add 0.2 inches to target position when left stick is pushed up or down
+
             targetPosition += gamepad2.left_stick_y * -0.2;
+
+            //safeties for slide pos
             if (targetPosition > maxTargetPosition) {
                 targetPosition = maxTargetPosition;
             }
             if (targetPosition < minTargetPosition) {
                 targetPosition = minTargetPosition;
             }
+
+            //takes starting position and subtracts from current input to get real position
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
             positionError = targetPosition - currentPosition;
+
+            //proportional pid controller
             slidePower = Kp * positionError;
+
             telemetry.addData("target position: ", targetPosition);
             telemetry.addData("position error: ", positionError);
             telemetry.addData("current position", currentPosition);
@@ -56,6 +65,7 @@ public class Slide_test extends LinearOpMode {
             telemetry.addData("Left servo: ", leftClaw.getPosition());
             telemetry.update();
 
+            //power safeties
             if (slidePower > 1) {
                 slidePower = 1;
             }
@@ -64,12 +74,14 @@ public class Slide_test extends LinearOpMode {
             }
             slideMotor.setPower(slidePower);
 
+            //close claw
             if (gamepad2.left_bumper) {
                 leftClaw.setPosition(1);
             }
             if (gamepad2.left_bumper) {
                 rightClaw.setPosition(0.7);
             }
+            //open claw
             if (gamepad2.right_bumper) {
                 rightClaw.setPosition(0.2);
             }
@@ -77,6 +89,30 @@ public class Slide_test extends LinearOpMode {
                 leftClaw.setPosition(0.6);
             }
 
+            //binds for specific heights - don't touch left stick, added 2 inches to junction height
+
+            /*
+            //ground junction
+            if (gamepad2.a){
+                targetPosition = 2;
+                slideMotor.setPower(slidePower);
+            }
+            //low junction
+            if (gamepad2.b){
+                targetPosition = 15.5;
+                slideMotor.setPower(slidePower);
+            }
+            //medium junction
+            if (gamepad2.x) {
+                targetPosition = 25.45;
+                slideMotor.setPower(slidePower);
+            }
+            //high junction
+            if (gamepad2.y){
+                targetPosition = 35.5;
+                slideMotor.setPower(slidePower);
+            }
+        */
         }
     }
 }
