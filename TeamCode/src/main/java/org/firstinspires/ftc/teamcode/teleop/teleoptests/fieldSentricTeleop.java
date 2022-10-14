@@ -1,8 +1,10 @@
+
 package org.firstinspires.ftc.teamcode.teleop.teleoptests;
 
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.minTargetPosition;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.slideTicksPerRev;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -11,11 +13,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp
-public class FullTeleOp extends LinearOpMode {
+@TeleOp (name = "Field Centric")
+public class fieldSentricTeleop extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
@@ -43,14 +44,18 @@ public class FullTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
-            );
+            Vector2d input = new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x)
+                .rotated(-drive.getRawExternalHeading());
 
+                drive.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );
             // add 0.2 inches to target position when left stick is pushed up or down
 
             targetPosition += gamepad2.left_stick_y * -0.2;
@@ -68,7 +73,7 @@ public class FullTeleOp extends LinearOpMode {
             positionError = targetPosition - currentPosition;
 
             //proportional pid controller
-            slidePower = (Kp * positionError) * 7;
+            slidePower = Kp * positionError;
 
             telemetry.addData("target position: ", targetPosition);
             telemetry.addData("position error: ", positionError);
@@ -100,7 +105,7 @@ public class FullTeleOp extends LinearOpMode {
                 rightClaw.setPosition(0.3);
             }
             if (gamepad2.right_bumper) {
-                leftClaw.setPosition(0.7);
+                leftClaw.setPosition(0.6);
             }
 
             //binds for specific heights - don't touch left stick, added 2 inches to junction height
