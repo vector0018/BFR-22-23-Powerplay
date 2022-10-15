@@ -41,7 +41,8 @@ public class fieldSentricTeleop extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
-        leftClaw.setDirection(Servo.Direction.REVERSE);
+        leftClaw.setDirection(Servo.Direction.FORWARD);
+        rightClaw.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
 
@@ -66,7 +67,7 @@ public class fieldSentricTeleop extends LinearOpMode {
                 new Pose2d(
                         input.getX(),
                         input.getY(),
-                        angleVal
+                         angleVal
                 )
         );
             // add 0.2 inches to target position when left stick is pushed up or down
@@ -106,19 +107,19 @@ public class fieldSentricTeleop extends LinearOpMode {
             }
             slideMotor.setPower(slidePower);
 
-            //close claw
+            //open claw
             if (gamepad2.left_bumper) {
                 leftClaw.setPosition(1);
             }
             if (gamepad2.left_bumper) {
-                rightClaw.setPosition(0.7);
+                rightClaw.setPosition(1);
             }
-            //open claw
+            //close claw
             if (gamepad2.right_bumper) {
-                rightClaw.setPosition(0.3);
+                rightClaw.setPosition(0.6);
             }
             if (gamepad2.right_bumper) {
-                leftClaw.setPosition(0.6);
+                leftClaw.setPosition(0.7);
             }
 
             //binds for specific heights - don't touch left stick, added 2 inches to junction height
