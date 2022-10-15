@@ -21,15 +21,18 @@ public class fieldSentricTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        DcMotor slideMotor = null;
-        Servo leftClaw = null;
-        Servo rightClaw = null;
+        DcMotor slideMotor;
+        Servo leftClaw;
+        Servo rightClaw;
         double Kp = 0.1;
         double currentPosition;
         double targetPosition = 0;
         double positionError;
         double slidePower;
-        double zeroPos = 0;
+        double zeroPos;
+        double xVal;
+        double yVal;
+        double angleVal;
 
 
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
@@ -44,16 +47,26 @@ public class fieldSentricTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            xVal = -gamepad1.left_stick_y;
+            yVal = -gamepad1.left_stick_x;
+            angleVal = -gamepad1.right_stick_x;
+
+            if (gamepad1.left_trigger > .1 || gamepad1.right_trigger > .1){
+                xVal *= 0.3;
+                yVal *= 0.3;
+                angleVal *= 0.3;
+            }
+
             Vector2d input = new Vector2d(
-                -gamepad1.left_stick_y,
-                -gamepad1.left_stick_x)
+                xVal,
+                yVal)
                 .rotated(-drive.getRawExternalHeading());
 
                 drive.setWeightedDrivePower(
                 new Pose2d(
                         input.getX(),
                         input.getY(),
-                        -gamepad1.right_stick_x
+                        angleVal
                 )
         );
             // add 0.2 inches to target position when left stick is pushed up or down
