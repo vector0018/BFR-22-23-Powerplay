@@ -24,7 +24,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         DcMotor slideMotor;
         Servo leftClaw;
         Servo rightClaw;
-        double Kp = 0.1;
+        double Kp = 0.2;
         double currentPosition;
         double targetPosition = 0;
         double positionError;
@@ -109,23 +109,28 @@ public class fieldSentricTeleop extends LinearOpMode {
 
             //open claw
             if (gamepad2.left_bumper) {
-                leftClaw.setPosition(1);
+                leftClaw.setPosition(.8);
             }
             if (gamepad2.left_bumper) {
-                rightClaw.setPosition(1);
+                rightClaw.setPosition(.7);
             }
             //close claw
             if (gamepad2.right_bumper) {
-                rightClaw.setPosition(0.6);
+                rightClaw.setPosition(0.5);
             }
             if (gamepad2.right_bumper) {
-                leftClaw.setPosition(0.7);
+                leftClaw.setPosition(0.6);
+            }
+            if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
+                leftClaw.setPosition(1);
+                rightClaw.setPosition(1);
             }
 
             //binds for specific heights - don't touch left stick, added 2 inches to junction height
 
 
             //ground junction
+            /*
             if (gamepad2.a){
                 targetPosition = 2;
                 slideMotor.setPower(slidePower);
@@ -144,7 +149,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             if (gamepad2.y){
                 targetPosition = 35.5;
                 slideMotor.setPower(slidePower);
-            }
+            } */
         }
     }
 }
