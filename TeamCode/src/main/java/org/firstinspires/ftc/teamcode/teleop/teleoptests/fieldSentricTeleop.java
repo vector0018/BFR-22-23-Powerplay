@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.s
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -24,6 +25,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         DcMotor slideMotor;
         Servo leftClaw;
         Servo rightClaw;
+        ColorSensor colorSensor;
         double Kp = 0.2;
         double currentPosition;
         double targetPosition = 0;
@@ -38,6 +40,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
         leftClaw = hardwareMap.get(Servo.class, "LC");
         rightClaw = hardwareMap.get(Servo.class, "RC");
+        colorSensor = hardwareMap.get(ColorSensor.class, "CS");
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
@@ -112,6 +115,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             telemetry.addData("Zero Position: ", zeroPos);
             telemetry.addData("Right servo: ", rightClaw.getPosition());
             telemetry.addData("Left servo: ", leftClaw.getPosition());
+            telemetry.addData("Color", colorSensor.toString());
             telemetry.update();
 
             //power safeties

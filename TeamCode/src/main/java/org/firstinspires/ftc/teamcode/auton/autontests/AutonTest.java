@@ -1,4 +1,4 @@
-
+/*
 package org.firstinspires.ftc.teamcode.auton.autontests;
 
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.encoderTicksToInches;
@@ -128,3 +128,4 @@ public class AutonTest extends LinearOpMode {
         return slidePower;
     }
 }
+ */
