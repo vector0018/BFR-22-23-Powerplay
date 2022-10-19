@@ -1,4 +1,3 @@
-/*
 package org.firstinspires.ftc.teamcode.auton.autontests;
 
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.encoderTicksToInches;
@@ -46,17 +45,22 @@ public class AutonTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+
             rightClaw.setPosition(0.5);
             leftClaw.setPosition(0.6);
+            sleep(5000);
 
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            .getX(),
-                            input.getY(),
-                            angleVal
-                    )
-            );
+            moveSlide (currentPosition , 2);
+            sleep(5000);
+            drive.setWeightedDrivePower(new Pose2d(0.1, 0, 0));
+            sleep(5000);
+            drive.setWeightedDrivePower(new Pose2d(-0.1, 0, 0));
+            sleep(5000);
+            drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
+            sleep(5000);
+
+            /*
             // add 0.2 inches to target position when left stick is pushed up or down
             if (Math.abs(gamepad2.left_stick_y) > .01) {
                 targetPosition += gamepad2.left_stick_y * -0.4;
@@ -97,6 +101,7 @@ public class AutonTest extends LinearOpMode {
                 leftClaw.setPosition(1);
                 rightClaw.setPosition(1);
             }
+            */
         }
     }
     private double moveSlide (double currentPosition , double targetPosition) {
@@ -128,4 +133,3 @@ public class AutonTest extends LinearOpMode {
         return slidePower;
     }
 }
- */
