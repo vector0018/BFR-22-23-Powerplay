@@ -4,18 +4,17 @@ import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.e
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.minTargetPosition;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.slideTicksPerRev;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.Set;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name =  "Blue 1" )
 public class AutonTest extends LinearOpMode {
@@ -32,6 +31,8 @@ public class AutonTest extends LinearOpMode {
         double xVal;
         double yVal;
         double angleVal;
+        double slidePower;
+        ElapsedTime runTime = new ElapsedTime();
 
 
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
@@ -43,16 +44,31 @@ public class AutonTest extends LinearOpMode {
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
         waitForStart();
+
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.6);
+        sleep(500);
+
+        telemetry.addData("claw", 0);
+        telemetry.update();
 
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        moveSlide (currentPosition, 2);
-        new Set(targetPosition = 4);
-        //  drive.setWeightedDrivePower(new Pose2d(12, 0, 0));
-        //  sleep(500);
-       // drive.setWeightedDrivePower(new Pose2d(-12, 0, 0));
-       // sleep(500);
+         runTime.reset();
+        while (currentPosition < 5.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 5);
+            slideMotor.setPower(slidePower);
+            telemetry.addData(
+                    "Slide motor", slidePower);
+            telemetry.update();
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+
+        slideMotor.setPower(0);
+
+          drive.setWeightedDrivePower(new Pose2d(8, 0, 0));
+          sleep(500);
+          drive.setWeightedDrivePower(new Pose2d(-8, 0, 0));
+          sleep(500);
        // drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
        // sleep(500);
 

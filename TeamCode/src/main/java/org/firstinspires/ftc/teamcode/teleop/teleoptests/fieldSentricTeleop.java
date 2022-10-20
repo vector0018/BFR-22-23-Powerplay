@@ -117,7 +117,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             telemetry.addData("Right servo: ", rightClaw.getPosition());
             telemetry.addData("Left servo: ", leftClaw.getPosition());
             telemetry.addData("Alpha: ", colorSensor.alpha());
-            telemetry.addData("Blue: ", colorSensor. .blue());
+            telemetry.addData("Blue: ", colorSensor.blue());
             telemetry.addData("Red: ", colorSensor.red());
             telemetry.addData("Green: ", colorSensor.green());
 
