@@ -117,7 +117,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             telemetry.addData("Right servo: ", rightClaw.getPosition());
             telemetry.addData("Left servo: ", leftClaw.getPosition());
             telemetry.addData("Alpha: ", colorSensor.alpha());
-            telemetry.addData("Blue: ", colorSensor.blue());
+            telemetry.addData("Blue: ", colorSensor. .blue());
             telemetry.addData("Red: ", colorSensor.red());
             telemetry.addData("Green: ", colorSensor.green());
 
@@ -146,6 +146,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 leftClaw.setPosition(0.6);
             }
+            // Open claw all; the way
             if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
                 leftClaw.setPosition(1);
                 rightClaw.setPosition(1);

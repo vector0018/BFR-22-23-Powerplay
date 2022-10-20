@@ -27,29 +27,34 @@ public class WheelTest extends OpMode {
 
     @Override
     public void loop() {
-       if(gamepad1.a){
-           leftFront.setPower(0.5);
-       }else{
-           leftFront.setPower(0);
-       }
+        if (gamepad1.a) {
+            leftFront.setPower(0.5);
+        } else {
+            leftFront.setPower(0);
+        }
 
-        if(gamepad1.b){
+        if (gamepad1.b) {
             leftRear.setPower(0.5);
-        }else{
+        } else {
             leftRear.setPower(0);
         }
 
-        if(gamepad1.x){
+        if (gamepad1.x) {
             rightFront.setPower(0.5);
-        }else{
+        } else {
             rightFront.setPower(0);
         }
 
-        if(gamepad1.y){
+        if (gamepad1.y) {
             rightRear.setPower(0.5);
-        }else{
+        } else {
             rightRear.setPower(0);
         }
 
+        if (gamepad1.right_bumper) {
+            rightFront.setPower(-0.5);
+        } else {
+            rightFront.setPower(0);
+        }
     }
 }
