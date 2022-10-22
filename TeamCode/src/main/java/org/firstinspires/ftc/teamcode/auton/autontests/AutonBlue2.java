@@ -19,8 +19,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name =  "Blue 1" )
-public class AutonTest extends LinearOpMode {
+@Autonomous(name =  "Blue 2" )
+public class AutonBlue2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
@@ -50,18 +50,20 @@ public class AutonTest extends LinearOpMode {
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
 
-        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15)
+        Trajectory moveToG3 = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(15)
                 .build();
-        Trajectory moveToG3 = drive.trajectoryBuilder(moveToSignal.end())
-                .strafeRight(3)
+        Trajectory finishG3 = drive.trajectoryBuilder(moveToG3.end())
+                .forward(4)
                 .build();
-        Trajectory FinishG3 = drive.trajectoryBuilder(moveToSignal.end())
-                .strafeRight(3)
-                .build();
-
         waitForStart();
-
+        Trajectory back2Start = drive.trajectoryBuilder(finishG3.end())
+                .strafeLeft(15)
+                .build();
+        waitForStart(); Trajectory moveToSignal = drive.trajectoryBuilder(back2Start.end())
+                .forward(8)
+                .build();
+        waitForStart();
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.6);
         sleep(500);
@@ -75,38 +77,32 @@ public class AutonTest extends LinearOpMode {
         telemetry.update();
 
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-         runTime.reset();
-        while (currentPosition < 10.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 10);
+        runTime.reset();
+        while (currentPosition < 2.0 && runTime.seconds()<0.5) {
+            slidePower = moveSlide(currentPosition, 2);
             slideMotor.setPower(slidePower);
-            telemetry.addData(
-                    "Slide motor", slidePower);
-            telemetry.update();
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
         slideMotor.setPower(0);
 
-        drive.followTrajectory(moveToSignal);
-        // TODO: color sensor code goes here
-        sleep(500);
         drive.followTrajectory(moveToG3);
-        drive.turn(-Math.PI/2);
-        sleep(500);
+        drive.followTrajectory(finishG3);
+        leftClaw.setPosition(.8);
+        rightClaw.setPosition(.7);
+        sleep(100);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 2.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 2);
+        while (currentPosition < 10.0 && runTime.seconds()<1.5) {
+            slidePower = moveSlide(currentPosition, 10);
             slideMotor.setPower(slidePower);
-            telemetry.addData(
-                    "Slide motor", slidePower);
-            telemetry.update();
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
+        drive.followTrajectory(back2Start);
+        drive.followTrajectory(moveToSignal);
         sleep(5000);
-       // drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
-       // sleep(500);
+        // drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
+        // sleep(500);
 
     }
     private double moveSlide (double currentPosition , double targetPosition) {
