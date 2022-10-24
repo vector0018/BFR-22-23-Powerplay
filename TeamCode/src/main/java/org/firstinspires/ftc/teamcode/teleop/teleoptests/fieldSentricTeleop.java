@@ -120,6 +120,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             telemetry.addData("Blue: ", colorSensor.blue());
             telemetry.addData("Red: ", colorSensor.red());
             telemetry.addData("Green: ", colorSensor.green());
+            telemetry.addData("argb" , colorSensor.argb());
 
             telemetry.update();
 
@@ -134,7 +135,7 @@ public class fieldSentricTeleop extends LinearOpMode {
 
             //open claw
             if (gamepad2.left_bumper) {
-                leftClaw.setPosition(.8);
+                leftClaw.setPosition(.7);
             }
             if (gamepad2.left_bumper) {
                 rightClaw.setPosition(.7);
@@ -144,12 +145,12 @@ public class fieldSentricTeleop extends LinearOpMode {
                 rightClaw.setPosition(0.5);
             }
             if (gamepad2.right_bumper) {
-                leftClaw.setPosition(0.6);
+                leftClaw.setPosition(0.4);
             }
             // Open claw all; the way
             if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
-                leftClaw.setPosition(1);
-                rightClaw.setPosition(1);
+                leftClaw.setPosition(.9);
+                rightClaw.setPosition(.9);
             }
 
             //binds for specific heights - don't touch left stick, added 2 inches to junction height

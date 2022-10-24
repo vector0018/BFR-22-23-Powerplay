@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class AutonBlue2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
-
+// listing the things
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         DcMotor slideMotor;
         ColorSensor colorSensor;
@@ -32,13 +32,14 @@ public class AutonBlue2 extends LinearOpMode {
         double currentPosition;
         double targetPosition = 0;
         double zeroPos;
-        double xVal;
-        double yVal;
-        double angleVal;
+        int greenValue;
+        int redValue;
+        int blueValue;
+        int alphaValue;
         double slidePower;
         ElapsedTime runTime = new ElapsedTime();
 
-
+// naming the things
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
         leftClaw = hardwareMap.get(Servo.class, "LC");
         rightClaw = hardwareMap.get(Servo.class, "RC");
@@ -49,25 +50,36 @@ public class AutonBlue2 extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
-
+// IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory moveToG3 = drive.trajectoryBuilder(new Pose2d())
                 .strafeRight(15)
                 .build();
         Trajectory finishG3 = drive.trajectoryBuilder(moveToG3.end())
                 .forward(4)
                 .build();
-        waitForStart();
         Trajectory back2Start = drive.trajectoryBuilder(finishG3.end())
                 .strafeLeft(15)
                 .build();
-        waitForStart(); Trajectory moveToSignal = drive.trajectoryBuilder(back2Start.end())
-                .forward(8)
+        Trajectory moveToSignal = drive.trajectoryBuilder(back2Start.end())
+                .forward(9)
                 .build();
-        waitForStart();
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.6);
-        sleep(500);
+        Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
+                .forward(5)
+                .build();
+        Trajectory strafeTo1 = drive.trajectoryBuilder(forwad4Zones.end())
+                .strafeLeft(12)
+                .build();
+        Trajectory strafeTo3 = drive.trajectoryBuilder(forwad4Zones.end())
+                .strafeRight(12)
+                .build();
 
+        waitForStart();
+
+// closes claw
+        rightClaw.setPosition(0.5);
+        leftClaw.setPosition(0.4);
+        sleep(500);
+// telemetry
         telemetry.addData("claw", 0);
         telemetry.addData("Alpha: ", colorSensor.alpha());
         telemetry.addData("Blue: ", colorSensor.blue());
@@ -75,7 +87,7 @@ public class AutonBlue2 extends LinearOpMode {
         telemetry.addData("Green: ", colorSensor.green());
         telemetry.addData("argb; ", colorSensor.argb());
         telemetry.update();
-
+// move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
         while (currentPosition < 2.0 && runTime.seconds()<0.5) {
@@ -83,14 +95,16 @@ public class AutonBlue2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
+//stop moving slide after while loop
         slideMotor.setPower(0);
-
+// uses trajectory from earlier to move
         drive.followTrajectory(moveToG3);
         drive.followTrajectory(finishG3);
-        leftClaw.setPosition(.8);
+// opens claw
+        leftClaw.setPosition(.7);
         rightClaw.setPosition(.7);
         sleep(100);
+// raise slide after putting down cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
         while (currentPosition < 10.0 && runTime.seconds()<1.5) {
@@ -98,13 +112,30 @@ public class AutonBlue2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
+        // moves back to start
         drive.followTrajectory(back2Start);
+        // Goes to signal sleeve
         drive.followTrajectory(moveToSignal);
+        //sleep(5000);
+        redValue = colorSensor.red();
+        blueValue = colorSensor.blue();
+        greenValue = colorSensor.green();
+        alphaValue = colorSensor.alpha();
+        drive.followTrajectory(forwad4Zones);
+        if (greenValue >= 300) {
+            // color green
+            drive.followTrajectory(strafeTo1);
+        }
+        else if (greenValue < 301) {
+            // color white
+            drive.followTrajectory(strafeTo3);
+        }
         sleep(5000);
         // drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
         // sleep(500);
 
     }
+    //slide variable
     private double moveSlide (double currentPosition , double targetPosition) {
         double Kp = 0.2;
         double positionError;
