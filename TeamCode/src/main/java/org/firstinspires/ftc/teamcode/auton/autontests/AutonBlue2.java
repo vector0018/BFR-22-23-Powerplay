@@ -44,6 +44,7 @@ public class AutonBlue2 extends LinearOpMode {
         leftClaw = hardwareMap.get(Servo.class, "LC");
         rightClaw = hardwareMap.get(Servo.class, "RC");
         colorSensor = hardwareMap.get(RevColorSensorV3.class, "CS");
+        colorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -61,16 +62,16 @@ public class AutonBlue2 extends LinearOpMode {
                 .strafeLeft(15)
                 .build();
         Trajectory moveToSignal = drive.trajectoryBuilder(back2Start.end())
-                .forward(9)
+                .forward(11)
                 .build();
         Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
-                .forward(5)
+                .forward(14)
                 .build();
         Trajectory strafeTo1 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeLeft(12)
+                .strafeLeft(25)
                 .build();
         Trajectory strafeTo3 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeRight(12)
+                .strafeRight(25)
                 .build();
 
         waitForStart();
@@ -112,26 +113,27 @@ public class AutonBlue2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
+        sleep(500);
         // moves back to start
         drive.followTrajectory(back2Start);
         // Goes to signal sleeve
         drive.followTrajectory(moveToSignal);
 
-        sleep(30000);
         redValue = colorSensor.red();
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
         alphaValue = colorSensor.alpha();
+        // prepares for the zones
         drive.followTrajectory(forwad4Zones);
-        if (greenValue >= 300) {
+
+        if (redValue < 80  && blueValue < 50) {
             // color green
             drive.followTrajectory(strafeTo1);
         }
-        else if (greenValue < 301) {
+        else if (greenValue > 50) {
             // color white
             drive.followTrajectory(strafeTo3);
         }
-        sleep(5000);
         // drive.setWeightedDrivePower(new Pose2d(2, 0, 45));
         // sleep(500);
 

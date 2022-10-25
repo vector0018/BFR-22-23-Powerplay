@@ -76,7 +76,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         );
             // add 0.2 inches to target position when left stick is pushed up or down
             if (Math.abs(gamepad2.left_stick_y) > .01) {
-                targetPosition += gamepad2.left_stick_y * -0.4;
+                targetPosition += gamepad2.left_stick_y * -1;
             }
              else if (gamepad2.a){
                 targetPosition = 2;
