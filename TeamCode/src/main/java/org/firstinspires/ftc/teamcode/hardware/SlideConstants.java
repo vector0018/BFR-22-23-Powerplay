@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.teleoptests;
+package org.firstinspires.ftc.teamcode.hardware;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @Config
