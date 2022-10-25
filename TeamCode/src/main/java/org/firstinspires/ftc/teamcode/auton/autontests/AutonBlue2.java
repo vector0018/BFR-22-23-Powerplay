@@ -116,7 +116,8 @@ public class AutonBlue2 extends LinearOpMode {
         drive.followTrajectory(back2Start);
         // Goes to signal sleeve
         drive.followTrajectory(moveToSignal);
-        //sleep(5000);
+
+        sleep(30000);
         redValue = colorSensor.red();
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
