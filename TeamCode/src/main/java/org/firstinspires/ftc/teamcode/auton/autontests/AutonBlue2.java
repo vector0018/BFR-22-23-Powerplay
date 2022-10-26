@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.auton.autontests;
 
-import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.maxTargetPosition;
-import static org.firstinspires.ftc.teamcode.teleop.teleoptests.SlideConstants.minTargetPosition;
+import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
+import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
