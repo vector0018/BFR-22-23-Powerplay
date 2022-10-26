@@ -126,7 +126,7 @@ public class AutonBlue2 extends LinearOpMode {
         // prepares for the zones
         drive.followTrajectory(forwad4Zones);
 
-        if (redValue < 80  && blueValue < 50) {
+        if (redValue < 65  && blueValue < 50) {
             // color green
             drive.followTrajectory(strafeTo1);
         }
