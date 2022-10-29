@@ -63,22 +63,22 @@ public class fieldSentricTeleop extends LinearOpMode {
             }
 
             Vector2d input = new Vector2d(
-                xVal,
-                yVal)
-                .rotated(-drive.getRawExternalHeading());
+                    xVal,
+                    yVal)
+                    .rotated(-drive.getRawExternalHeading());
 
-                drive.setWeightedDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                         angleVal
-                )
-        );
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            input.getX(),
+                            input.getY(),
+                            angleVal
+                    )
+            );
             // add 0.2 inches to target position when left stick is pushed up or down
             if (Math.abs(gamepad2.left_stick_y) > .01) {
                 targetPosition += gamepad2.left_stick_y * -1;
             }
-             else if (gamepad2.a){
+            else if (gamepad2.a){
                 targetPosition = 2;
             }
             //low junction
@@ -157,26 +157,26 @@ public class fieldSentricTeleop extends LinearOpMode {
 
 
             //ground junction
-            /*
-            if (gamepad2.a){
-                targetPosition = 2;
-                slideMotor.setPower(slidePower);
-            }
-            //low junction
-            if (gamepad2.b){
-                targetPosition = 15.5;
-                slideMotor.setPower(slidePower);
-            }
-            //medium junction
-            if (gamepad2.x) {
-                targetPosition = 25.45;
-                slideMotor.setPower(slidePower);
-            }
-            //high junction
-            if (gamepad2.y){
-                targetPosition = 35.5;
-                slideMotor.setPower(slidePower);
-            } */
+           /*
+           if (gamepad2.a){
+               targetPosition = 2;
+               slideMotor.setPower(slidePower);
+           }
+           //low junction
+           if (gamepad2.b){
+               targetPosition = 15.5;
+               slideMotor.setPower(slidePower);
+           }
+           //medium junction
+           if (gamepad2.x) {
+               targetPosition = 25.45;
+               slideMotor.setPower(slidePower);
+           }
+           //high junction
+           if (gamepad2.y){
+               targetPosition = 35.5;
+               slideMotor.setPower(slidePower);
+           } */
         }
     }
 }
