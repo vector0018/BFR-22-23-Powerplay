@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Subsystems.Slide;
 import org.firstinspires.ftc.teamcode.hardware.Subsystems.Subsystem;
 
@@ -21,6 +22,7 @@ public class RobotHardware {
 
     public SampleMecanumDrive drive = null;
     public Slide slide = null;
+    public Claw claw = null;
 
     public ArrayList<Subsystem> subsystems = new ArrayList<Subsystem>();
 
@@ -37,6 +39,9 @@ public class RobotHardware {
 
         slide = new Slide(map);
         subsystems.add(slide);
+
+        claw = new Claw(map);
+        subsystems.add(claw);
     }
 
     public void sendTelemetry(Telemetry telemetry) {
