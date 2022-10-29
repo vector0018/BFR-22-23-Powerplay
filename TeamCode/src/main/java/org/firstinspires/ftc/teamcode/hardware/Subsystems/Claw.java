@@ -23,7 +23,7 @@ public class Claw implements Subsystem{
     public void sendTelemetry(Telemetry telemetry) {
 
     }
-    public void moveClaw(boolean close, boolean open, double fullCloseLeft, double fullCloseRight){
+    public void moveClaw(boolean close, boolean open, double fullOpenLeft, double fullOpenRight){
         //open claw
         if (open) {
             leftClaw.setPosition(.7);
@@ -39,7 +39,7 @@ public class Claw implements Subsystem{
             leftClaw.setPosition(0.4);
         }
         // Open claw all; the way
-        if (fullCloseLeft > .1 || fullCloseRight > .1){
+        if (fullOpenLeft > .1 || fullOpenRight > .1){
             leftClaw.setPosition(.9);
             rightClaw.setPosition(.9);
         }
