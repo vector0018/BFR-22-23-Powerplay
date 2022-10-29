@@ -23,23 +23,23 @@ public class Claw implements Subsystem{
     public void sendTelemetry(Telemetry telemetry) {
 
     }
-    public void moveClaw(){
+    public void moveClaw(boolean close, boolean open, double fullCloseLeft, double fullCloseRight){
         //open claw
-        if (gamepad2.left_bumper) {
+        if (open) {
             leftClaw.setPosition(.7);
         }
         if (gamepad2.left_bumper) {
             rightClaw.setPosition(.7);
         }
         //close claw
-        if (gamepad2.right_bumper) {
+        if (close) {
             rightClaw.setPosition(0.5);
         }
         if (gamepad2.right_bumper) {
             leftClaw.setPosition(0.4);
         }
         // Open claw all; the way
-        if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
+        if (fullCloseLeft > .1 || fullCloseRight > .1){
             leftClaw.setPosition(.9);
             rightClaw.setPosition(.9);
         }
