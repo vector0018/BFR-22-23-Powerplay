@@ -85,8 +85,8 @@ public class AutonBlue2 extends LinearOpMode {
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 2.0 && runTime.seconds()<0.5) {
-            slidePower = moveSlide(currentPosition, 2);
+        while (currentPosition < 27.0 && runTime.seconds()<0.5) {
+            slidePower = moveSlide(currentPosition, 27);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }

@@ -49,16 +49,22 @@ public class Auton2 extends LinearOpMode {
         rightClaw.setDirection(Servo.Direction.REVERSE);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(16)
+                .forward(15)
                 .build();
         Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
                 .forward(14)
                 .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeLeft(27)
+        Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
+                .strafeRight(15)
                 .build();
-        Trajectory strafeTo3 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeRight(27)
+        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
+                .strafeLeft(42)
+                .build();
+        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
+                .strafeLeft(15)
+                .build();
+        Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
+                .strafeRight(12)
                 .build();
 
         waitForStart();
@@ -66,7 +72,6 @@ public class Auton2 extends LinearOpMode {
         // closes claw
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
-        sleep(500);
         // telemetry
         telemetry.addData("Alpha: ", colorSensor.alpha());
         telemetry.addData("Blue: ", colorSensor.blue());
@@ -86,6 +91,11 @@ public class Auton2 extends LinearOpMode {
         slideMotor.setPower(0);
         // uses trajectory from earlier to move
         drive.followTrajectory(moveToM1);
+        while (currentPosition > 0.0 && runTime.seconds()<5) {
+            slidePower = moveSlide(currentPosition, 0);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
         // opens claw
         leftClaw.setPosition(.7);
         rightClaw.setPosition(.7);
@@ -98,8 +108,6 @@ public class Auton2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        // moves back to start
-        drive.followTrajectory(back2Start);
         // Goes to signal sleeve
         drive.followTrajectory(moveToSignal);
         redValue = colorSensor.red();
@@ -115,6 +123,7 @@ public class Auton2 extends LinearOpMode {
         }
         else if (redValue < 80 && blueValue < 80){
             // color purple
+            drive.followTrajectory(backTo2);
         }
         else if (greenValue > 60) {
             // color white
