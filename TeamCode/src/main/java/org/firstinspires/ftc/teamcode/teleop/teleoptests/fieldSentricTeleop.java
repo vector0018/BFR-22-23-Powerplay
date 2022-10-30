@@ -147,36 +147,11 @@ public class fieldSentricTeleop extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 leftClaw.setPosition(0.4);
             }
-            // Open claw all; the way
+            // Open claw all the way
             if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
                 leftClaw.setPosition(.9);
                 rightClaw.setPosition(.9);
             }
-
-            //binds for specific heights - don't touch left stick, added 2 inches to junction height
-
-
-            //ground junction
-           /*
-           if (gamepad2.a){
-               targetPosition = 2;
-               slideMotor.setPower(slidePower);
-           }
-           //low junction
-           if (gamepad2.b){
-               targetPosition = 15.5;
-               slideMotor.setPower(slidePower);
-           }
-           //medium junction
-           if (gamepad2.x) {
-               targetPosition = 25.45;
-               slideMotor.setPower(slidePower);
-           }
-           //high junction
-           if (gamepad2.y){
-               targetPosition = 35.5;
-               slideMotor.setPower(slidePower);
-           } */
         }
     }
 }

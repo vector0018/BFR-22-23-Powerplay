@@ -48,18 +48,8 @@ public class Auton2 extends LinearOpMode {
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
-        Trajectory moveToG1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeLeft(27)
-                .build();
-        Trajectory finishG1 = drive.trajectoryBuilder(moveToG1.end())
+        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
                 .forward(16)
-                .build();
-        Trajectory back2Start = drive.trajectoryBuilder(finishG1.end())
-                .back(16)
-                .strafeRight(27)
-                .build();
-        Trajectory moveToSignal = drive.trajectoryBuilder(back2Start.end())
-                .forward(15)
                 .build();
         Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
                 .forward(14)
@@ -87,16 +77,15 @@ public class Auton2 extends LinearOpMode {
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 2.0 && runTime.seconds()<0.5) {
-            slidePower = moveSlide(currentPosition, 2);
+        while (currentPosition < 8.0 && runTime.seconds()<1.5) {
+            slidePower = moveSlide(currentPosition, 8);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         //stop moving slide after while loop
         slideMotor.setPower(0);
         // uses trajectory from earlier to move
-        drive.followTrajectory(moveToG1);
-        drive.followTrajectory(finishG1);
+        drive.followTrajectory(moveToM1);
         // opens claw
         leftClaw.setPosition(.7);
         rightClaw.setPosition(.7);
