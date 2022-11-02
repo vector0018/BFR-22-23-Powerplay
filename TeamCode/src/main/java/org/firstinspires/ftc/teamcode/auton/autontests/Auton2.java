@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name =  "Blue 1" )
+@Autonomous(name =  "Auton 1" )
 public class Auton2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -91,6 +91,7 @@ public class Auton2 extends LinearOpMode {
         slideMotor.setPower(0);
         // uses trajectory from earlier to move
         drive.followTrajectory(moveToM1);
+
         while (currentPosition > 0.0 && runTime.seconds()<5) {
             slidePower = moveSlide(currentPosition, 0);
             slideMotor.setPower(slidePower);

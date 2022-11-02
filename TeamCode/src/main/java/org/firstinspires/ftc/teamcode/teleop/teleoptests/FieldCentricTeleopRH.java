@@ -1,21 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop.teleoptests;
 
-import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
-import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.slideTicksPerRev;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.Subsystems.Claw;

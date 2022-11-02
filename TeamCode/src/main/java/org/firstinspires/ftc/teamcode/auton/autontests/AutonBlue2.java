@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name =  "Blue 2" )
+@Autonomous(name =  "Auton 2" )
 public class AutonBlue2 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // listing the things

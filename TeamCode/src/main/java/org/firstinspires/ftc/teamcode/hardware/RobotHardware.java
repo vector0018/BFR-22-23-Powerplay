@@ -20,9 +20,9 @@ public class RobotHardware {
         return instance;
     }
 
-    public SampleMecanumDrive drive = null;
-    public Slide slide = null;
-    public Claw claw = null;
+    public SampleMecanumDrive drive;
+    public Slide slide;
+    public Claw claw;
 
     public ArrayList<Subsystem> subsystems = new ArrayList<Subsystem>();
 
