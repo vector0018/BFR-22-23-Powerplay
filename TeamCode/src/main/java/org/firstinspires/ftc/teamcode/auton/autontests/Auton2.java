@@ -11,11 +11,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name =  "Auton 1" )
+@Autonomous(name =  "Blue Left" )
 public class Auton2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -28,6 +31,7 @@ public class Auton2 extends LinearOpMode {
         double currentPosition;
         double targetPosition = 0;
         double zeroPos;
+        DistanceSensor distanceSensor;
         int greenValue;
         int redValue;
         int blueValue;
@@ -40,6 +44,7 @@ public class Auton2 extends LinearOpMode {
         leftClaw = hardwareMap.get(Servo.class, "LC");
         rightClaw = hardwareMap.get(Servo.class, "RC");
         colorSensor = hardwareMap.get(ColorSensor.class, "CS");
+        distanceSensor = hardwareMap.get(DistanceSensor.class , "CS");
         colorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -49,7 +54,7 @@ public class Auton2 extends LinearOpMode {
         rightClaw.setDirection(Servo.Direction.REVERSE);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15)
+                .forward(15.393701)
                 .build();
         Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
                 .forward(14)
@@ -85,8 +90,8 @@ public class Auton2 extends LinearOpMode {
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 35.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 35);
+        while (currentPosition < 38.0 && runTime.seconds()<2) {
+            slidePower = moveSlide(currentPosition, 38);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -99,12 +104,20 @@ public class Auton2 extends LinearOpMode {
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
         alphaValue = colorSensor.alpha();
-
+        telemetry.addData("Blue: ", colorSensor.blue());
+        telemetry.addData("Red: ", colorSensor.red());
+        telemetry.addData("Green: ", colorSensor.green());
+        telemetry.addData("argb" , colorSensor.argb());
+        telemetry.addData("Distance: " , distanceSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
         // prepares for the zones
         drive.followTrajectory(forwad4Zones);
         // uses trajectory from earlier to move
         drive.followTrajectory(moveToM1);
         sleep(500);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+
         while (currentPosition > 15.0 && runTime.seconds()<5) {
             slidePower = moveSlide(currentPosition, 15);
             slideMotor.setPower(slidePower);
@@ -122,7 +135,8 @@ public class Auton2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        if (blueValue < 75 && greenValue < 105 && greenValue > 90 && redValue < 50) {
+
+        if (blueValue < 75 && greenValue > 85) {
             // color green
             drive.followTrajectory(strafeTo1);
         }
