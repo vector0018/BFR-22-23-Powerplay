@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name =  "Red Left" )
-public class AutonBlue2 extends LinearOpMode {
+@Autonomous(name =  "Red Right" )
+public class redRight extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         // listing the things
@@ -60,16 +60,17 @@ public class AutonBlue2 extends LinearOpMode {
                 .forward(14)
                 .build();
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeRight(15)
-                .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeLeft(42)
-                .build();
-        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
                 .strafeLeft(15)
                 .build();
+        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
+                .strafeLeft(12)
+                .build();
+        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
+                .strafeRight(15)
+                .build();
         Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(12)
+                .strafeRight(4+
+                        2)
                 .build();
 
         waitForStart();
