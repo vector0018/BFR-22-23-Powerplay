@@ -73,10 +73,10 @@ public class multiCone extends LinearOpMode {
                 .strafeRight(42)
                 .build();
         Trajectory toStack = drive.trajectoryBuilder(moveToM1.end())
-                .lineToConstantHeading(new Vector2d(-24,60).rotated(90))
+                .strafeRight(18)
                 .build();
-        Trajectory H1 = drive.trajectoryBuilder(toStack.end())
-                .lineToConstantHeading(new Vector2d(0, 70).rotated(0))
+        Trajectory finishStack = drive.trajectoryBuilder(moveToM1.end().plus(new Pose2d(0, -12, Math.toRadians(-90))))
+                .forward(25)
                 .build();
         waitForStart();
 
@@ -95,13 +95,11 @@ public class multiCone extends LinearOpMode {
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 42);
+        while (currentPosition < 38.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 38);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        //stop moving slide after while loop
-        slideMotor.setPower(0);
 
         // Goes to signal sleeve
         drive.followTrajectory(moveToSignal);
@@ -118,19 +116,16 @@ public class multiCone extends LinearOpMode {
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
-        telemetry.update();
-
-        telemetry.update();
+        telemetry.update();;
         // prepares for the zones
         drive.followTrajectory(forwad4Zones);
         // uses trajectory from earlier to move
         drive.followTrajectory(moveToM1);
-        sleep(500);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
 
-        while (currentPosition > 15.0 && runTime.seconds()<5) {
-            slidePower = moveSlide(currentPosition, 15);
+        while (currentPosition > 27.0 && runTime.seconds()<.75) {
+            slidePower = moveSlide(currentPosition, 27);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -141,35 +136,41 @@ public class multiCone extends LinearOpMode {
         // raise slide after putting down cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 10.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 10);
+        while (currentPosition < 15 && runTime.seconds()<10.0) {
+            slidePower = moveSlide(currentPosition, 15);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         drive.followTrajectory(toStack);
-        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 9);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
+        drive.turn(Math.toRadians(-90));
+        drive.followTrajectory(finishStack);
+//        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
+//            slidePower = moveSlide(currentPosition, 9);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+        // closes claw
+        rightClaw.setPosition(0.5);
+        leftClaw.setPosition(0.4);
+        sleep(100);
         while (currentPosition < 42.0 && runTime.seconds()<1.5) {
             slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
-        if (blueValue < 75 && greenValue > 85) {
-            // color green
-            drive.followTrajectory(strafeTo1);
-        }
-        else if (blueValue < 75 && greenValue < 90){
-            // color brown
-            drive.followTrajectory(backTo2);
-        }
-        else if (blueValue > 100 && redValue > 70) {
-            // color pink
-            drive.followTrajectory(strafeTo3);
-        }
+//        if (blueValue < 75 && greenValue > 85) {
+//            // color green
+//            drive.followTrajectory(strafeTo1);
+//        }
+//        else if (blueValue < 75 && greenValue < 90){
+//            // color brown
+//            drive.followTrajectory(backTo2);
+//        }
+//        else if (blueValue > 100 && redValue > 70) {
+//            // color pink
+//            drive.followTrajectory(strafeTo3);
+//        }
 
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
