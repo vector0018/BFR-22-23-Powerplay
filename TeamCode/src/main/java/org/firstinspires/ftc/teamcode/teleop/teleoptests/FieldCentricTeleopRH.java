@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.teleop.teleoptests;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Subsystems.Slide;
-
+@Disabled
 @TeleOp (name = "Field Centric but I can spell")
 public class FieldCentricTeleopRH extends LinearOpMode{
     @Override
