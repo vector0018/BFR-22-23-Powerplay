@@ -73,11 +73,14 @@ public class multiCone extends LinearOpMode {
                 .strafeRight(42)
                 .build();
         Trajectory toStack = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(18)
+                .splineTo(new Vector2d(-5,-10), Math.toRadians(-90))
                 .build();
-        Trajectory finishStack = drive.trajectoryBuilder(moveToM1.end().plus(new Pose2d(0, -12, Math.toRadians(-90))))
-                .forward(25)
-                .build();
+//        Trajectory toStack = drive.trajectoryBuilder(moveToM1.end())
+//                .strafeRight(18)
+//                .build();
+//        Trajectory finishStack = drive.trajectoryBuilder(moveToM1.end().plus(new Pose2d(0, -12, Math.toRadians(-90))))
+//                .forward(25)
+//                .build();
         waitForStart();
 
         // closes claw
@@ -142,8 +145,8 @@ public class multiCone extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         drive.followTrajectory(toStack);
-        drive.turn(Math.toRadians(-90));
-        drive.followTrajectory(finishStack);
+        //        drive.turn(Math.toRadians(-90));
+        //        drive.followTrajectory(finishStack);
 //        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
 //            slidePower = moveSlide(currentPosition, 9);
 //            slideMotor.setPower(slidePower);
