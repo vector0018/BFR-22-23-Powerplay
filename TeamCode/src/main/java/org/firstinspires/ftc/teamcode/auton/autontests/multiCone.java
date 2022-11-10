@@ -213,4 +213,5 @@ public class multiCone extends LinearOpMode {
         }
         return slidePower;
     }
+    org.firstinspires.ftc.teamcode.drive.advanced.TransferPose.currentPose = drive.getPoseEstimate();
 }

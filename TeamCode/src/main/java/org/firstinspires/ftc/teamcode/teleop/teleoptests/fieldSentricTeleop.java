@@ -5,15 +5,13 @@ import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTick
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.slideTicksPerRev;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -36,6 +34,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         double xVal;
         double yVal;
         double angleVal;
+        myLocalizer.setPoseEstimate(org.firstinspires.ftc.teamcode.drive.advanced.TransferPose.currentPose);
 
 
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
