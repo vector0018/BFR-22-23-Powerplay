@@ -7,8 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Pipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name =  "OpenCV test" )
 public class OpenCVtest extends LinearOpMode {
@@ -18,6 +22,7 @@ public class OpenCVtest extends LinearOpMode {
         ColorSensor colorSensor;
         Servo leftClaw;
         Servo rightClaw;
+        Pipeline pipeline;
         double currentPosition;
         double targetPosition = 0;
         double zeroPos;
@@ -33,5 +38,24 @@ public class OpenCVtest extends LinearOpMode {
         // With live preview
         OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
+        pipeline = new Pipeline();
+        camera.setPipeline(pipeline);
+        waitForStart();
     }
 }

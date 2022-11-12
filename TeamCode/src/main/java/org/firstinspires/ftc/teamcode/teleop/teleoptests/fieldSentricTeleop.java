@@ -34,7 +34,7 @@ public class fieldSentricTeleop extends LinearOpMode {
         double xVal;
         double yVal;
         double angleVal;
-        myLocalizer.setPoseEstimate(org.firstinspires.ftc.teamcode.drive.advanced.TransferPose.currentPose);
+        //myLocalizer.setPoseEstimate(org.firstinspires.ftc.teamcode.drive.advanced.TransferPose.currentPose);
 
 
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
