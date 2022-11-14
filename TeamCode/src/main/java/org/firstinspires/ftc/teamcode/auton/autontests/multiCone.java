@@ -18,6 +18,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Pipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(name =  "Multi Cone" )
 public class multiCone extends LinearOpMode {
@@ -27,12 +32,14 @@ public class multiCone extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         DcMotor slideMotor;
         ColorSensor colorSensor;
+        DistanceSensor distanceSensor;
         Servo leftClaw;
         Servo rightClaw;
+        Pipeline pipeline;
         double currentPosition;
         double targetPosition = 0;
         double zeroPos;
-        DistanceSensor distanceSensor;
+        int pipelineValue;
         int greenValue;
         int redValue;
         int blueValue;
@@ -53,6 +60,26 @@ public class multiCone extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        // With live preview
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened() {
+                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
+        pipeline = new Pipeline();
+        camera.setPipeline(pipeline);
+
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
                 .forward(15.393701)
@@ -81,7 +108,10 @@ public class multiCone extends LinearOpMode {
 //        Trajectory finishStack = drive.trajectoryBuilder(moveToM1.end().plus(new Pose2d(0, -12, Math.toRadians(-90))))
 //                .forward(25)
 //                .build();
+
         waitForStart();
+
+        pipelineValue = pipeline.getMeanCbValue();
 
         // closes claw
         rightClaw.setPosition(0.5);
@@ -162,18 +192,15 @@ public class multiCone extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
-//        if (blueValue < 75 && greenValue > 85) {
-//            // color green
-//            drive.followTrajectory(strafeTo1);
-//        }
-//        else if (blueValue < 75 && greenValue < 90){
-//            // color brown
-//            drive.followTrajectory(backTo2);
-//        }
-//        else if (blueValue > 100 && redValue > 70) {
-//            // color pink
-//            drive.followTrajectory(strafeTo3);
-//        }
+          if (pipelineValue < 130){
+            // TODO: Park in zone 1
+        }
+        else if (pipelineValue >= 130 && pipelineValue < 150){
+            // todo: park in zone 2
+        }
+        else if (pipelineValue >= 150){
+            // todo: park in zone 3
+      }
 
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
