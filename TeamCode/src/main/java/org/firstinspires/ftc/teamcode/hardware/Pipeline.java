@@ -53,5 +53,4 @@ public class Pipeline extends OpenCvPipeline {
     {
         return meanCbValue;
     }
-
 }

@@ -79,36 +79,18 @@ public class multiCone extends LinearOpMode {
         });
         pipeline = new Pipeline();
         camera.setPipeline(pipeline);
+        drive.setPoseEstimate(new Pose2d(-36, -72 , 0));
 
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
-        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15.393701)
+        Trajectory moveToH1 = drive.trajectoryBuilder(new Pose2d(-36 , -72 , 0))
+                .forward(54)
                 .build();
-        Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
-                .forward(39)
-                .build();
-        Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
+        Trajectory FinishH1 = drive.trajectoryBuilder(moveToH1.end())
                 .strafeLeft(15)
                 .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeLeft(12)
+        Trajectory ToCone = drive.trajectoryBuilder(FinishH1.end())
+                .splineTo(new Vector2d(-70, 12 ),Math.toRadians(-90))
                 .build();
-        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(15)
-                .build();
-        Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(42)
-                .build();
-        Trajectory toStack = drive.trajectoryBuilder(moveToM1.end())
-                .splineTo(new Vector2d(-5,-10), Math.toRadians(-90))
-                .build();
-//        Trajectory toStack = drive.trajectoryBuilder(moveToM1.end())
-//                .strafeRight(18)
-//                .build();
-//        Trajectory finishStack = drive.trajectoryBuilder(moveToM1.end().plus(new Pose2d(0, -12, Math.toRadians(-90))))
-//                .forward(25)
-//                .build();
-
         waitForStart();
 
         pipelineValue = pipeline.getMeanCbValue();
@@ -128,14 +110,15 @@ public class multiCone extends LinearOpMode {
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 38.0 && runTime.seconds()<1) {
-            slidePower = moveSlide(currentPosition, 38);
+        while (currentPosition < 42.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
         // Goes to signal sleeve
-        drive.followTrajectory(moveToSignal);
+        drive.followTrajectory(moveToH1);
+        drive.followTrajectory(FinishH1);
         redValue = colorSensor.red();
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
@@ -149,11 +132,8 @@ public class multiCone extends LinearOpMode {
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
-        telemetry.update();;
-        // prepares for the zones
-        drive.followTrajectory(forwad4Zones);
-        // uses trajectory from earlier to move
-        drive.followTrajectory(moveToM1);
+        telemetry.update();
+        sleep(1000);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
 
@@ -163,25 +143,24 @@ public class multiCone extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // opens claw
-        leftClaw.setPosition(.9);
-        rightClaw.setPosition(.9);
+        leftClaw.setPosition(.7);
+        rightClaw.setPosition(.7);
         sleep(100);
         // raise slide after putting down cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 15 && runTime.seconds()<10.0) {
-            slidePower = moveSlide(currentPosition, 15);
+        while (currentPosition < 42 && runTime.seconds()<1.5) {
+            slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        drive.followTrajectory(toStack);
-        //        drive.turn(Math.toRadians(-90));
-        //        drive.followTrajectory(finishStack);
-//        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
-//            slidePower = moveSlide(currentPosition, 9);
-//            slideMotor.setPower(slidePower);
-//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-//        }
+        drive.followTrajectory(ToCone);
+        /*
+        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
+            slidePower = moveSlide(currentPosition, 9);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
         // closes claw
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
@@ -210,7 +189,10 @@ public class multiCone extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
+         */
+
     }
+
     //slide variable
     private double moveSlide (double currentPosition , double targetPosition) {
         double Kp = 0.2;
@@ -240,5 +222,4 @@ public class multiCone extends LinearOpMode {
         }
         return slidePower;
     }
-  //  org.firstinspires.ftc.teamcode.drive.advanced.TransferPose.currentPose = drive.getPoseEstimate();
 }
