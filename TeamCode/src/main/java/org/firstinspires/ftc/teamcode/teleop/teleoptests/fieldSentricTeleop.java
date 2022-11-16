@@ -134,7 +134,7 @@ public class fieldSentricTeleop extends LinearOpMode {
 
             //open claw
             if (gamepad2.left_bumper) {
-                leftClaw.setPosition(.7);
+                leftClaw.setPosition(.6);
             }
             if (gamepad2.left_bumper) {
                 rightClaw.setPosition(.7);
@@ -148,7 +148,7 @@ public class fieldSentricTeleop extends LinearOpMode {
             }
             // Open claw all the way
             if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
-                leftClaw.setPosition(.9);
+                leftClaw.setPosition(.8);
                 rightClaw.setPosition(.9);
             }
         }
