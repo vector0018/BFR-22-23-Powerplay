@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auton.autontests;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -15,7 +14,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Pipeline;
@@ -85,20 +83,23 @@ public class multiCone extends LinearOpMode {
         Trajectory moveToH1 = drive.trajectoryBuilder(new Pose2d(-36 , -72 , 0))
                 .forward(54)
                 .build();
-        Trajectory FinishH1 = drive.trajectoryBuilder(moveToH1.end())
+        Trajectory finishH1 = drive.trajectoryBuilder(moveToH1.end())
                 .strafeLeft(15)
                 .build();
-        Trajectory ToCone = drive.trajectoryBuilder(FinishH1.end())
-                .splineTo(new Vector2d(-70, 12 ),Math.toRadians(-90))
+        Trajectory beginToStack = drive.trajectoryBuilder(finishH1.end())
+                .strafeRight(20)
+                .build();
+        Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
+                .splineToLinearHeading(new Pose2d(22, -99, Math.toRadians(-85)), 0)
                 .build();
         waitForStart();
 
         pipelineValue = pipeline.getMeanCbValue();
 
         // closes claw
-        rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
-        sleep(500);
+        rightClaw.setPosition(0.5);
+        sleep(300);
         // telemetry
         telemetry.addData("Alpha: ", colorSensor.alpha());
         telemetry.addData("Blue: ", colorSensor.blue());
@@ -118,7 +119,7 @@ public class multiCone extends LinearOpMode {
 
         // Goes to signal sleeve
         drive.followTrajectory(moveToH1);
-        drive.followTrajectory(FinishH1);
+        drive.followTrajectory(finishH1);
         redValue = colorSensor.red();
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
@@ -133,7 +134,6 @@ public class multiCone extends LinearOpMode {
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.update();
-        sleep(1000);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
 
@@ -154,23 +154,31 @@ public class multiCone extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        drive.followTrajectory(ToCone);
-        /*
-        while (currentPosition < 9.0 && runTime.seconds()<1.5) {
+        drive.followTrajectory(beginToStack);
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.6);
+        sleep(300);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 9 && runTime.seconds()<1.5) {
             slidePower = moveSlide(currentPosition, 9);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
+        drive.followTrajectory(ToCone);
+
         // closes claw
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
-        sleep(100);
-        while (currentPosition < 42.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 42);
+        sleep(300);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition < 15.0 && runTime.seconds()<1.5) {
+            slidePower = moveSlide(currentPosition, 15);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
+/*
           if (pipelineValue < 130){
             // TODO: Park in zone 1
         }
