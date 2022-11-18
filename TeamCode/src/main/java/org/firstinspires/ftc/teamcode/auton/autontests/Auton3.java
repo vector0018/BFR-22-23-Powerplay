@@ -4,7 +4,10 @@ import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTick
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
 
+import android.app.TaskInfo;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,11 +17,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Pipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name =  "Blue Right" )
+@Autonomous(name =  "Right" )
 public class Auton3 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -32,10 +39,14 @@ public class Auton3 extends LinearOpMode {
         double targetPosition = 0;
         double zeroPos;
         DistanceSensor distanceSensor;
-        int greenValue;
-        int redValue;
-        int blueValue;
-        int alphaValue;
+        int cameraMonitorViewId;
+        OpenCvCamera camera;
+        Pipeline pipeline;
+        int pipelineValue;
+//        int greenValue;
+//        int redValue;
+//        int blueValue;
+//        int alphaValue;
         double slidePower;
         ElapsedTime runTime = new ElapsedTime();
 
@@ -52,12 +63,27 @@ public class Auton3 extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
+        cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        // With live preview
+        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened() {
+                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
+        pipeline = new Pipeline();
+        camera.setPipeline(pipeline);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
-        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15.393701)
-                .build();
-        Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
-                .forward(14)
+        Trajectory forwad4Zones = drive.trajectoryBuilder(new Pose2d())
+                .forward(53)
                 .build();
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeLeft(15)
@@ -69,46 +95,42 @@ public class Auton3 extends LinearOpMode {
                 .strafeRight(15)
                 .build();
         Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(4+
-                        2)
+                .strafeRight(42)
                 .build();
 
         waitForStart();
-
+        pipelineValue = pipeline.getMeanCbValue();
         // closes claw
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
         sleep(500);
         // telemetry
-        telemetry.addData("Alpha: ", colorSensor.alpha());
-        telemetry.addData("Blue: ", colorSensor.blue());
-        telemetry.addData("Red: ", colorSensor.red());
-        telemetry.addData("Green: ", colorSensor.green());
-        telemetry.addData("argb; ", colorSensor.argb());
-        telemetry.addData("target position: ", targetPosition);
-
-        telemetry.update();
+//        telemetry.addData("Alpha: ", colorSensor.alpha());
+//        telemetry.addData("Blue: ", colorSensor.blue());
+//        telemetry.addData("Red: ", colorSensor.red());
+//        telemetry.addData("Green: ", colorSensor.green());
+//        telemetry.addData("argb; ", colorSensor.argb());
+//        telemetry.addData("target position: ", targetPosition);
+//
+//        telemetry.update();
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 38.0 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 38);
+        while (currentPosition < 42.0 && runTime.seconds()<2) {
+            slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        //stop moving slide after while loop
-        slideMotor.setPower(0);
-
-        // Goes to signal sleeve
-        drive.followTrajectory(moveToSignal);
-        redValue = colorSensor.red();
-        blueValue = colorSensor.blue();
-        greenValue = colorSensor.green();
-        alphaValue = colorSensor.alpha();
-        telemetry.addData("Blue: ", colorSensor.blue());
-        telemetry.addData("Red: ", colorSensor.red());
-        telemetry.addData("Green: ", colorSensor.green());
-        telemetry.addData("argb" , colorSensor.argb());
+//        //stop moving slide after while loop
+//        slideMotor.setPower(0);
+//        redValue = colorSensor.red();
+//        blueValue = colorSensor.blue();
+//        greenValue = colorSensor.green();
+//        alphaValue = colorSensor.alpha();
+//        telemetry.addData("Blue: ", colorSensor.blue());
+//        telemetry.addData("Red: ", colorSensor.red());
+//        telemetry.addData("Green: ", colorSensor.green());
+        telemetry.addData("Pipeline Value: " , pipelineValue);
         telemetry.addData("Distance: " , distanceSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
         // prepares for the zones
@@ -136,20 +158,18 @@ public class Auton3 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
-        if (blueValue < 75 && greenValue > 85) {
+        if  (pipelineValue < 130){
             // color green
             drive.followTrajectory(strafeTo1);
         }
-        else if (blueValue < 75 && greenValue < 90){
+        else if (pipelineValue >= 130 && pipelineValue < 150){
             // color brown
             drive.followTrajectory(backTo2);
         }
-        else if (blueValue > 100 && redValue > 70) {
+        else if (pipelineValue >= 150){
             // color pink
             drive.followTrajectory(strafeTo3);
         }
-
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
         while (currentPosition > 0.0 && runTime.seconds()<1.5) {

@@ -17,8 +17,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.Pipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name =  "Blue Left" )
+@Autonomous(name =  "Left" )
 public class Auton2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -52,12 +57,27 @@ public class Auton2 extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.REVERSE);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        // With live preview
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened() {
+                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
+        Pipeline pipeline = new Pipeline();
+        camera.setPipeline(pipeline);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
-        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15.393701)
-                .build();
-        Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
-                .forward(14)
+        Trajectory forwad4Zones = drive.trajectoryBuilder(new Pose2d())
+                .forward(29)
                 .build();
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeRight(15)
@@ -73,7 +93,7 @@ public class Auton2 extends LinearOpMode {
                 .build();
 
         waitForStart();
-
+        int pipelineValue = pipeline.getMeanCbValue();
         // closes claw
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
@@ -97,9 +117,6 @@ public class Auton2 extends LinearOpMode {
         }
         //stop moving slide after while loop
         slideMotor.setPower(0);
-
-        // Goes to signal sleeve
-        drive.followTrajectory(moveToSignal);
         redValue = colorSensor.red();
         blueValue = colorSensor.blue();
         greenValue = colorSensor.green();
@@ -136,15 +153,15 @@ public class Auton2 extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
-        if (blueValue < 75 && greenValue > 85) {
+        if  (pipelineValue < 130){
             // color green
             drive.followTrajectory(strafeTo1);
         }
-        else if (blueValue < 75 && greenValue < 90){
+        else if (pipelineValue >= 130 && pipelineValue < 150){
             // color brown
             drive.followTrajectory(backTo2);
         }
-        else if (blueValue > 100 && redValue > 70) {
+        else if (pipelineValue >= 150){
             // color pink
             drive.followTrajectory(strafeTo3);
         }
