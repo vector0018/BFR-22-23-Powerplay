@@ -83,7 +83,7 @@ public class Auton3 extends LinearOpMode {
         camera.setPipeline(pipeline);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory forwad4Zones = drive.trajectoryBuilder(new Pose2d())
-                .forward(53)
+                .forward(55)
                 .build();
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeLeft(15)
@@ -104,15 +104,6 @@ public class Auton3 extends LinearOpMode {
         rightClaw.setPosition(0.5);
         leftClaw.setPosition(0.4);
         sleep(500);
-        // telemetry
-//        telemetry.addData("Alpha: ", colorSensor.alpha());
-//        telemetry.addData("Blue: ", colorSensor.blue());
-//        telemetry.addData("Red: ", colorSensor.red());
-//        telemetry.addData("Green: ", colorSensor.green());
-//        telemetry.addData("argb; ", colorSensor.argb());
-//        telemetry.addData("target position: ", targetPosition);
-//
-//        telemetry.update();
         // move slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
@@ -121,15 +112,6 @@ public class Auton3 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-//        //stop moving slide after while loop
-//        slideMotor.setPower(0);
-//        redValue = colorSensor.red();
-//        blueValue = colorSensor.blue();
-//        greenValue = colorSensor.green();
-//        alphaValue = colorSensor.alpha();
-//        telemetry.addData("Blue: ", colorSensor.blue());
-//        telemetry.addData("Red: ", colorSensor.red());
-//        telemetry.addData("Green: ", colorSensor.green());
         telemetry.addData("Pipeline Value: " , pipelineValue);
         telemetry.addData("Distance: " , distanceSensor.getDistance(DistanceUnit.CM));
         telemetry.update();

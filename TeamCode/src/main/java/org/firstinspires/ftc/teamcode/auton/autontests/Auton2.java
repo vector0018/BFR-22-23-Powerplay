@@ -77,7 +77,7 @@ public class Auton2 extends LinearOpMode {
         camera.setPipeline(pipeline);
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
         Trajectory forwad4Zones = drive.trajectoryBuilder(new Pose2d())
-                .forward(29)
+                .forward(55)
                 .build();
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeRight(15)
@@ -115,19 +115,13 @@ public class Auton2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        //stop moving slide after while loop
-        slideMotor.setPower(0);
-        redValue = colorSensor.red();
-        blueValue = colorSensor.blue();
-        greenValue = colorSensor.green();
-        alphaValue = colorSensor.alpha();
         telemetry.addData("Blue: ", colorSensor.blue());
         telemetry.addData("Red: ", colorSensor.red());
         telemetry.addData("Green: ", colorSensor.green());
         telemetry.addData("argb" , colorSensor.argb());
         telemetry.addData("Distance: " , distanceSensor.getDistance(DistanceUnit.CM));
         telemetry.update();
-        // prepares for the zones
+        // Gets to zone 2
         drive.followTrajectory(forwad4Zones);
         // uses trajectory from earlier to move
         drive.followTrajectory(moveToM1);
@@ -141,7 +135,7 @@ public class Auton2 extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // opens claw
-        leftClaw.setPosition(.7);
+        leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
         sleep(100);
         // raise slide after putting down cone
