@@ -3,15 +3,9 @@ package org.firstinspires.ftc.teamcode.auton.autontests;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
-
-import android.app.TaskInfo;
-
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Pipeline;
 import org.opencv.core.Mat;
@@ -27,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
-@Disabled
+
 @Autonomous(name =  "Blue Term" )
 public class multiCone extends LinearOpMode {
 
@@ -102,7 +95,25 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-23, 28.5, Math.toRadians(-85)), 0)
                 .build();
         Trajectory BeganH1 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(24, -12, Math.toRadians(-180)), 0)
+                .splineToLinearHeading(new Pose2d(-12, 24, Math.toRadians(90)), 0)
+                .build();
+        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
+                .splineToLinearHeading(new Pose2d(-24, 12, Math.toRadians(90)),0)
+                .build();
+        Trajectory Backwards = drive.trajectoryBuilder(finishH1.end())
+                .back(20)
+                .build();
+        Trajectory L2 = drive.trajectoryBuilder(Backwards.end())
+                .splineToLinearHeading(new Pose2d(-70,24, Math.toRadians(180)),0)
+                .build();
+        Trajectory zone1 = drive.trajectoryBuilder(L2.end())
+                .splineToLinearHeading(new Pose2d(70, 12, Math.toRadians(0)),0)
+                .build();
+        Trajectory zone2 = drive.trajectoryBuilder(L2.end())
+                .splineToLinearHeading(new Pose2d(70, 36, Math.toRadians(0)),0)
+                .build();
+        Trajectory zone3 = drive.trajectoryBuilder(L2.end())
+                .splineToLinearHeading(new Pose2d(70, 60, Math.toRadians(0)),0)
                 .build();
         waitForStart();
         pipelineValue = pipeline.getMeanCbValue();
@@ -171,6 +182,63 @@ public class multiCone extends LinearOpMode {
         rightClaw.setPosition(.7);
 
         drive.followTrajectory(BeganH1);
+
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition < 42.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 42);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        drive.followTrajectory(finishH1);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 15.0 && runTime.seconds()<.5) {
+            slidePower = moveSlide(currentPosition, 15);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        drive.followTrajectory(BeganH1);
+        drive.followTrajectory(ToCone);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 10 && runTime.seconds()<2) {
+            slidePower = moveSlide(currentPosition, 10);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        rightClaw.setPosition(0.5);
+        leftClaw.setPosition(0.4);
+
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition < 15 && runTime.seconds()<.5) {
+            slidePower = moveSlide(currentPosition, 15);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        drive.followTrajectory(Backwards);
+        drive.followTrajectory(L2);
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 10 && runTime.seconds()<.5) {
+            slidePower = moveSlide(currentPosition, 10);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
+
+        if (pipelineValue ==  000){
+            drive.followTrajectory(zone1);
+        }
+        else if (pipelineValue == 000){
+            drive.followTrajectory(zone2);
+        }
+        else if (pipelineValue == 000){
+            drive.followTrajectory(zone3);
+        }
     }
     //slide variable
     private double moveSlide (double currentPosition , double targetPosition) {
