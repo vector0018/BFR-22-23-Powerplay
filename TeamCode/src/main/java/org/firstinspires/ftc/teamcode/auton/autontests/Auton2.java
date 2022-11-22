@@ -82,13 +82,16 @@ public class Auton2 extends LinearOpMode {
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeRight(15)
                 .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory backAFew = drive.trajectoryBuilder(moveToM1.end())
+                .back(3)
+                .build();
+        Trajectory strafeTo1 = drive.trajectoryBuilder(backAFew.end())
                 .strafeLeft(42)
                 .build();
-        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory backTo2 = drive.trajectoryBuilder(backAFew.end())
                 .strafeLeft(15)
                 .build();
-        Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory strafeTo3 = drive.trajectoryBuilder(backAFew.end())
                 .strafeRight(12)
                 .build();
 
@@ -146,16 +149,16 @@ public class Auton2 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
-        if  (pipelineValue < 130){
+        drive.followTrajectory(backAFew);
+        if  (pipelineValue < 138){
             // color green
             drive.followTrajectory(strafeTo1);
         }
-        else if (pipelineValue >= 130 && pipelineValue < 150){
+        else if (pipelineValue >= 138 && pipelineValue < 145){
             // color brown
             drive.followTrajectory(backTo2);
         }
-        else if (pipelineValue >= 150){
+        else if (pipelineValue >= 145){
             // color pink
             drive.followTrajectory(strafeTo3);
         }

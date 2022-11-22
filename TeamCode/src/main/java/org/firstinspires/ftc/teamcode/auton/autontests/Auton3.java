@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPo
 
 import android.app.TaskInfo;
 
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -88,13 +89,16 @@ public class Auton3 extends LinearOpMode {
         Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
                 .strafeLeft(15)
                 .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory backAFew = drive.trajectoryBuilder(moveToM1.end())
+                .back(3)
+                .build();
+        Trajectory strafeTo1 = drive.trajectoryBuilder(backAFew.end())
                 .strafeLeft(12)
                 .build();
-        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory backTo2 = drive.trajectoryBuilder(backAFew.end())
                 .strafeRight(15)
                 .build();
-        Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
+        Trajectory strafeTo3 = drive.trajectoryBuilder(backAFew.end())
                 .strafeRight(42)
                 .build();
 
@@ -122,14 +126,13 @@ public class Auton3 extends LinearOpMode {
         sleep(500);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-
         while (currentPosition > 15.0 && runTime.seconds()<5) {
             slidePower = moveSlide(currentPosition, 15);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // opens claw
-        leftClaw.setPosition(.7);
+        leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
         sleep(100);
         // raise slide after putting down cone
@@ -140,15 +143,16 @@ public class Auton3 extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        if  (pipelineValue < 130){
+        drive.followTrajectory(backAFew);
+        if  (pipelineValue < 138){
             // color green
             drive.followTrajectory(strafeTo1);
         }
-        else if (pipelineValue >= 130 && pipelineValue < 150){
+        else if (pipelineValue >= 138 && pipelineValue < 145){
             // color brown
             drive.followTrajectory(backTo2);
         }
-        else if (pipelineValue >= 150){
+        else if (pipelineValue >= 145){
             // color pink
             drive.followTrajectory(strafeTo3);
         }
