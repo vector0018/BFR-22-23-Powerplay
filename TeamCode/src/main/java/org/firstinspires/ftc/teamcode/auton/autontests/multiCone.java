@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.Pipeline;
-import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -56,7 +55,7 @@ public class multiCone extends LinearOpMode {
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.setDirection(Servo.Direction.REVERSE);
+        rightClaw.setDirection(Servo.Direction.FORWARD);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -116,6 +115,7 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(70, 60, Math.toRadians(0)),0)
                 .build();
         waitForStart();
+
         pipelineValue = pipeline.getMeanCbValue();
         //close claw
             rightClaw.setPosition(0.5);
@@ -166,20 +166,17 @@ public class multiCone extends LinearOpMode {
 
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 10.0 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 10);
+        while (currentPosition > 9.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 9);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.4);
-
         drive.followTrajectory(beginToStack);
         drive.followTrajectory(ToCone);
 
-        leftClaw.setPosition(.6);
-        rightClaw.setPosition(.7);
+        leftClaw.setPosition(.5);
+        rightClaw.setPosition(.4);
 
         drive.followTrajectory(BeganH1);
 

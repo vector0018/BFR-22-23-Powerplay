@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-@Disabled
 @TeleOp
 public class Slide_test extends LinearOpMode {
 
@@ -75,21 +74,25 @@ public class Slide_test extends LinearOpMode {
             }
             slideMotor.setPower(slidePower);
 
-            //close claw
-            if (gamepad2.left_bumper) {
-                leftClaw.setPosition(1);
-            }
-            if (gamepad2.left_bumper) {
-                rightClaw.setPosition(0.7);
-            }
             //open claw
+            if (gamepad2.left_bumper) {
+              //  leftClaw.setPosition(.6);
+            }
+            if (gamepad2.left_bumper) {
+                rightClaw.setPosition(.5);
+            }
+            //close claw
             if (gamepad2.right_bumper) {
                 rightClaw.setPosition(0.2);
             }
             if (gamepad2.right_bumper) {
-                leftClaw.setPosition(0.6);
+            //    leftClaw.setPosition(0.4);
             }
-
+            // Open claw all the way
+            if (gamepad2.left_trigger > .1 || gamepad2.right_trigger > .1){
+                //leftClaw.setPosition(.8);
+                rightClaw.setPosition(0);
+            }
             //binds for specific heights - don't touch left stick, added 2 inches to junction height
 
             /*
