@@ -79,11 +79,11 @@ public class Slide_test extends LinearOpMode {
               //  leftClaw.setPosition(.6);
             }
             if (gamepad2.left_bumper) {
-                rightClaw.setPosition(.5);
+                rightClaw.setPosition(1);
             }
             //close claw
             if (gamepad2.right_bumper) {
-                rightClaw.setPosition(0.2);
+                rightClaw.setPosition(0.5);
             }
             if (gamepad2.right_bumper) {
             //    leftClaw.setPosition(0.4);
