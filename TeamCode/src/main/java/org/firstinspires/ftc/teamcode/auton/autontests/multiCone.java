@@ -56,7 +56,7 @@ public class multiCone extends LinearOpMode {
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.FORWARD);
-// camera stuff
+        // camera stuff
         int cameraMonitorViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         // With live preview
@@ -73,53 +73,60 @@ public class multiCone extends LinearOpMode {
         });
         pipeline = new Pipeline();
         camera.setPipeline(pipeline);
-        drive.setPoseEstimate(new Pose2d(-36, -72 , 0));
-        // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches. For spline to line heading X and Y are inverted from normal coordiant planes
-        Trajectory moveToH1 = drive.trajectoryBuilder(new Pose2d(-36 , -72 , 0))
-                .forward(48)
-                .splineToLinearHeading(new Pose2d(0,24, Math.toRadians(0)), 0)
+        drive.setPoseEstimate(new Pose2d(-63, -36 , 0));
+        // IMPORTANT: these are the directions we move and whether we strafe or move forward or
+        // turn. They use inches. For spline to line heading X and Y are inverted from normal
+        // coordinate plane
+        Trajectory forwardToH3 = drive.trajectoryBuilder(new Pose2d(-63 , -36 , 0))
+                .forward(40)
                 .build();
-        Trajectory beginToStack = drive.trajectoryBuilder(moveToH1.end())
-                .splineToLinearHeading(new Pose2d(-3, 28.5, Math.toRadians(0)), 0)
+        Trajectory moveToH3 = drive.trajectoryBuilder(forwardToH3.end())
+                .splineToLinearHeading(new Pose2d(-12,-24,0), 0)
                 .build();
-        Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-3, -9, Math.toRadians(-85)), 0)
+        Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
+                .splineToLinearHeading(new Pose2d(-15, -36, Math.toRadians(0)), 0)
                 .build();
-        Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
-                .splineToLinearHeading(new Pose2d(-3, 28.5, Math.toRadians(-85)), 0)
-                .build();
-        Trajectory FinishL3 = drive.trajectoryBuilder(BeginL3.end())
-                .splineToLinearHeading(new Pose2d(-23, 28.5, Math.toRadians(-85)), 0)
-                .build();
-        Trajectory BeganH1 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-12, 24, Math.toRadians(90)), 0)
-                .build();
-        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
-                .splineToLinearHeading(new Pose2d(-24, 12, Math.toRadians(90)),0)
-                .build();
-        Trajectory Backwards = drive.trajectoryBuilder(finishH1.end())
-                .back(20)
-                .build();
-        Trajectory L2 = drive.trajectoryBuilder(Backwards.end())
-                .splineToLinearHeading(new Pose2d(-70,24, Math.toRadians(180)),0)
-                .build();
-        Trajectory zone1 = drive.trajectoryBuilder(L2.end())
-                .splineToLinearHeading(new Pose2d(70, 12, Math.toRadians(0)),0)
-                .build();
-        Trajectory zone2 = drive.trajectoryBuilder(L2.end())
-                .splineToLinearHeading(new Pose2d(70, 36, Math.toRadians(0)),0)
-                .build();
-        Trajectory zone3 = drive.trajectoryBuilder(L2.end())
-                .splineToLinearHeading(new Pose2d(70, 60, Math.toRadians(0)),0)
-                .build();
+//        Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
+//                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-85)), 0)
+//                .build();
+//        Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
+//                .splineToLinearHeading(new Pose2d(-12, -48, Math.toRadians(-85)), 0)
+//                .build();
+//        Trajectory FinishL3 = drive.trajectoryBuilder(BeginL3.end())
+//                .splineToLinearHeading(new Pose2d(-12, -40, Math.toRadians(-180)), 0)
+//                .build();
+//        Trajectory BeganH1 = drive.trajectoryBuilder(ToCone.end())
+//                .splineToLinearHeading(new Pose2d(-12, -24, Math.toRadians(90)), 0)
+//                .build();
+//        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
+//                .splineToLinearHeading(new Pose2d(-24, -12, Math.toRadians(90)),0)
+//                .build();
+//        Trajectory Backwards = drive.trajectoryBuilder(finishH1.end())
+//                .back(20)
+//                .build();
+//        Trajectory BeginL2 = drive.trajectoryBuilder(ToCone.end())
+//                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(90)),0)
+//                .build();
+//        Trajectory FinishL2 = drive.trajectoryBuilder(BeginL2.end())
+//                .splineToLinearHeading(new Pose2d(-48,-30, Math.toRadians(180)),0)
+//                .build();
+//        Trajectory zone1 = drive.trajectoryBuilder(BeginL2.end())
+//                .splineToLinearHeading(new Pose2d(-36, -12, Math.toRadians(0)),0)
+//                .build();
+//        Trajectory zone2 = drive.trajectoryBuilder(BeginL2.end())
+//                .splineToLinearHeading(new Pose2d(-36, -36, Math.toRadians(0)),0)
+//                .build();
+//        Trajectory zone3 = drive.trajectoryBuilder(BeginL2.end())
+//                .splineToLinearHeading(new Pose2d(-36, -60, Math.toRadians(0)),0)
+//                .build();
         waitForStart();
-        // Gets sleave value
+        // Gets sleeve value
         pipelineValue = pipeline.getMeanCbValue();
         //close claw
-            rightClaw.setPosition(0.5);
-            leftClaw.setPosition(0.4);
+        rightClaw.setPosition(1);
+        leftClaw.setPosition(0.3);
         sleep(300);
-//      Raise slide
+        // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
         while (currentPosition < 42.0 && runTime.seconds()<2) {
@@ -127,12 +134,13 @@ public class multiCone extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-//      Goes to the high junction 3
-        drive.followTrajectory(moveToH1);
-//          opens claw
-            leftClaw.setPosition(.6);
-            rightClaw.setPosition(.7);
-// there isn't a sleep here becuase we open the claw on the way down to save time
+        // Goes to the high junction 3
+        drive.followTrajectory(forwardToH3);
+        drive.followTrajectory(moveToH3);
+        // opens claw
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
+        // there isn't a sleep here because we open the claw on the way down to save time
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
         while (currentPosition > 15.0 && runTime.seconds()<.75) {
@@ -140,107 +148,108 @@ public class multiCone extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-//      We center on the tile so we can turn without hiting anything
+        // We center on the tile so we can turn without hiting anything
         drive.followTrajectory(beginToStack);
-// lowers slide before we turn so we don't hit anything
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 10.0 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 10);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// heads to cones
-        drive.followTrajectory(ToCone);
-// closes the claw
-            rightClaw.setPosition(0.5);
-            leftClaw.setPosition(0.4);
-// heads to L3
-        drive.followTrajectory(BeginL3);
-        drive.followTrajectory(FinishL3);
-//opens the claw
-        leftClaw.setPosition(.6);
-        rightClaw.setPosition(.7);
-// lowers the slide to get the cone more consistant
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 9.0 && runTime.seconds()<.5) {
-            slidePower = moveSlide(currentPosition, 9);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// heads back to the cones
-        drive.followTrajectory(beginToStack);
-        drive.followTrajectory(ToCone);
-// closes the claw
-        leftClaw.setPosition(.5);
-        rightClaw.setPosition(.4);
-// heads to the high Junction 1
-        drive.followTrajectory(BeganH1);
-// raises the slide all the way
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<1) {
-            slidePower = moveSlide(currentPosition, 42);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// finishes heading to the High junction 1
-        drive.followTrajectory(finishH1);
-// lowers the slide for half a second
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 15.0 && runTime.seconds()<.5) {
-            slidePower = moveSlide(currentPosition, 15);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// heads back to cones
-        drive.followTrajectory(BeganH1);
-        drive.followTrajectory(ToCone);
-// lowers the slide so we can pick up the cone
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 10 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 10);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// closes claw
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.4);
-// raises slide
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition < 15 && runTime.seconds()<.5) {
-            slidePower = moveSlide(currentPosition, 15);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// heads to L2
-        drive.followTrajectory(Backwards);
-        drive.followTrajectory(L2);
-// lowers the slide to 10 inches
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 10 && runTime.seconds()<.5) {
-            slidePower = moveSlide(currentPosition, 10);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
-// opens the claw
-        leftClaw.setPosition(.6);
-        rightClaw.setPosition(.7);
-// park stuff
-        if (pipelineValue ==  000){
-            drive.followTrajectory(zone1);
-        }
-        else if (pipelineValue == 000){
-            drive.followTrajectory(zone2);
-        }
-        else if (pipelineValue == 000){
-            drive.followTrajectory(zone3);
-        }
+        // lowers slide before we turn so we don't hit anything
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 10.0 && runTime.seconds()<2) {
+//            slidePower = moveSlide(currentPosition, 10);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // heads to cones
+//        drive.followTrajectory(ToCone);
+//        // closes the claw
+//        rightClaw.setPosition(0.5);
+//        leftClaw.setPosition(0.4);
+//        // heads to L3
+//        drive.followTrajectory(BeginL3);
+//        drive.followTrajectory(FinishL3);
+//        //opens the claw
+//        leftClaw.setPosition(.6);
+//        rightClaw.setPosition(.7);
+//        // lowers the slide to get the cone more consistent
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 9.0 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 9);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // heads back to the cones
+//        drive.followTrajectory(beginToStack);
+//        drive.followTrajectory(ToCone);
+//        // closes the claw
+//        leftClaw.setPosition(.5);
+//        rightClaw.setPosition(.4);
+//        // heads to the high Junction 1
+//        drive.followTrajectory(BeganH1);
+//        // raises the slide all the way
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition < 42.0 && runTime.seconds()<1) {
+//            slidePower = moveSlide(currentPosition, 42);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // finishes heading to the High junction 1
+//        drive.followTrajectory(finishH1);
+//        // lowers the slide for half a second
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 15.0 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 15);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // heads back to cones
+//        drive.followTrajectory(BeganH1);
+//        drive.followTrajectory(ToCone);
+//        // lowers the slide so we can pick up the cone
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 10 && runTime.seconds()<2) {
+//            slidePower = moveSlide(currentPosition, 10);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // closes claw
+//        rightClaw.setPosition(0.5);
+//        leftClaw.setPosition(0.4);
+//        // raises slide
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition < 15 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 15);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // heads to L2
+//        drive.followTrajectory(Backwards);
+//        drive.followTrajectory(BeginL2);
+//        drive.followTrajectory(FinishL2);
+//        // lowers the slide to 10 inches
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 10 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 10);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+//        // opens the claw
+//        leftClaw.setPosition(.6);
+//        rightClaw.setPosition(.7);
+//        // park stuff
+//        if (pipelineValue ==  000){
+//            drive.followTrajectory(zone1);
+//        }
+//        else if (pipelineValue == 000){
+//            drive.followTrajectory(zone2);
+//        }
+//        else if (pipelineValue == 000){
+//            drive.followTrajectory(zone3);
+//        }
     }
     //slide variable
     private double moveSlide (double currentPosition , double targetPosition) {
