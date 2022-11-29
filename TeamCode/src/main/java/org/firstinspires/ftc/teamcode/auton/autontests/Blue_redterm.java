@@ -20,8 +20,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name =  "Blue Term" )
-public class multiCone extends LinearOpMode {
+@Autonomous(name =  "Blue Red Term" )
+public class Blue_redterm extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         // listing the things
@@ -78,9 +78,10 @@ public class multiCone extends LinearOpMode {
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or
         // turn. They use inches. For spline to line heading X and Y are inverted from normal
         // coordinate plane
-        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , -36 , 0))
+        // in this auton x is negative and y is positive
+        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-14,-18), 0)
+                .splineToLinearHeading(new Pose2d(-14,18), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
                 .splineToLinearHeading(new Pose2d(-18, -36, Math.toRadians(0)), 0)
