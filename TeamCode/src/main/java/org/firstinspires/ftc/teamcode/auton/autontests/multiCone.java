@@ -95,7 +95,7 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-14, -53, Math.toRadians(180)), 0)
                 .build();
         Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-12, -63, Math.toRadians(-90)), 0)
+                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
                 .build();
         Trajectory BeganH1 = drive.trajectoryBuilder(ToCone2.end())
                 .splineToLinearHeading(new Pose2d(-12, -24, Math.toRadians(90)), 0)
@@ -137,7 +137,7 @@ public class multiCone extends LinearOpMode {
         // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<1.5) {
+        while (currentPosition < 42.0 && runTime.seconds()<.5) {
             slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -173,21 +173,16 @@ public class multiCone extends LinearOpMode {
         // closes the claw
         rightClaw.setPosition(1);
         leftClaw.setPosition(0.3);
-        sleep(400);
+        sleep(500);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 15 && runTime.seconds()<0.6) {
-            slidePower = moveSlide(currentPosition, 15);
+        while (currentPosition < 13 && runTime.seconds()<0.6) {
+            slidePower = moveSlide(currentPosition, 13);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to L3
         drive.followTrajectory(BeginL3);
-        poseEstimate = drive.getPoseEstimate();
-        telemetry.addData("x", poseEstimate.getX());
-        telemetry.addData("y", poseEstimate.getY());
-        telemetry.addData("heading", poseEstimate.getHeading());
-        telemetry.update();;
         drive.followTrajectory(FinishL3);
         //Lowers the slide so we can place a cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -203,7 +198,7 @@ public class multiCone extends LinearOpMode {
         // lowers the slide to get the cone more consistent
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 7.0 && runTime.seconds()<.6) {
+        while (currentPosition < 7 && runTime.seconds()<.6) {
             slidePower = moveSlide(currentPosition, 7);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -249,9 +244,10 @@ public class multiCone extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        // closes claw
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.4);
+        //Closes claw
+        leftClaw.setPosition(.3);
+        rightClaw.setPosition(1);
+        sleep(350);
         // raises slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
@@ -272,9 +268,9 @@ public class multiCone extends LinearOpMode {
 //            slideMotor.setPower(slidePower);
 //            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
 //        }
-//        // opens the claw
-//        leftClaw.setPosition(.6);
-//        rightClaw.setPosition(.7);
+        // opens the claw
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
 //        // park stuff
 //        if (pipelineValue ==  000){
 //            drive.followTrajectory(zone1);
