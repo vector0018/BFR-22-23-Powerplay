@@ -81,36 +81,36 @@ public class Blue_redterm extends LinearOpMode {
         // in this auton x is negative and y is positive
         Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-14,18), 0)
+                .splineToLinearHeading(new Pose2d(-14,24), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
-                .splineToLinearHeading(new Pose2d(-18, -36, Math.toRadians(0)), 0)
+                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(0)), 0)
                 .build();
         Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-12, -58, Math.toRadians(-90)), 0)
+                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
                 .build();
-        Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
-                .splineToLinearHeading(new Pose2d(-12, -40, Math.toRadians(-90)), 0)
+        Trajectory RedoH2 = drive.trajectoryBuilder(ToCone.end())
+                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(-90)), 0)
                 .build();
-        Trajectory FinishL3 = drive.trajectoryBuilder(BeginL3.end())
-                .splineToLinearHeading(new Pose2d(-14, -53, Math.toRadians(180)), 0)
+        Trajectory finishH2PT2 = drive.trajectoryBuilder(RedoH2.end())
+                .splineToLinearHeading(new Pose2d(-14,24, Math.toRadians(0)), 0)
                 .build();
-        Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
+        Trajectory ToCone2 = drive.trajectoryBuilder(finishH2PT2.end())
+                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(0)), 0)
                 .build();
-        Trajectory BeganH1 = drive.trajectoryBuilder(ToCone2.end())
-                .splineToLinearHeading(new Pose2d(-12, -24, Math.toRadians(90)), 0)
+        Trajectory headingToStack = drive.trajectoryBuilder(ToCone2.end())
+                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
                 .build();
-        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
-                .splineToLinearHeading(new Pose2d(-30,-17, Math.toRadians(90)),0)
+        Trajectory ToCone3 = drive.trajectoryBuilder(headingToStack.end())
+                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
                 .build();
-        Trajectory zone1 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone1 = drive.trajectoryBuilder(ToCone3.end())
                 .splineToLinearHeading(new Pose2d(-36, -12, Math.toRadians(0)),0)
                 .build();
-        Trajectory zone2 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone2 = drive.trajectoryBuilder(ToCone3.end())
                 .splineToLinearHeading(new Pose2d(-36, -36, Math.toRadians(0)),0)
                 .build();
-        Trajectory zone3 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone3 = drive.trajectoryBuilder(ToCone3.end())
                 .splineToLinearHeading(new Pose2d(-36, -60, Math.toRadians(0)),0)
                 .build();
         waitForStart();
