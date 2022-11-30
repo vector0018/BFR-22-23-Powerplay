@@ -22,6 +22,10 @@ public class Slide implements Subsystem {
 
     }
 
+    public Slide() {
+
+    }
+
     @Override
     public void initialize(HardwareMap map, Telemetry telemetry) {
         slideMotor = map.get(DcMotor.class, "SM");
