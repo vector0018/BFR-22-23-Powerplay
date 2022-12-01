@@ -3,11 +3,9 @@ package org.firstinspires.ftc.teamcode.auton.autontests;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.minTargetPosition;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,11 +13,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-@Disabled
-@Autonomous(name =  "Red Right" )
+import org.firstinspires.ftc.teamcode.hardware.Pipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
+@Autonomous(name =  "Red right" )
 public class redRight extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -27,18 +28,21 @@ public class redRight extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         DcMotor slideMotor;
         ColorSensor colorSensor;
+        DistanceSensor distanceSensor;
         Servo leftClaw;
         Servo rightClaw;
+        Pipeline pipeline;
         double currentPosition;
         double targetPosition = 0;
         double zeroPos;
-        DistanceSensor distanceSensor;
+        int pipelineValue;
         int greenValue;
         int redValue;
         int blueValue;
         int alphaValue;
         double slidePower;
         ElapsedTime runTime = new ElapsedTime();
+        Pose2d poseEstimate;
 
         // naming the things
         slideMotor = hardwareMap.get(DcMotor.class, "SM");
@@ -52,113 +56,188 @@ public class redRight extends LinearOpMode {
         slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         zeroPos = encoderTicksToInches(slideMotor.getCurrentPosition());
         leftClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.setDirection(Servo.Direction.REVERSE);
-        // IMPORTANT: these are the directions we move and whether we strafe or move forward or turn. They use inches
-        Trajectory moveToSignal = drive.trajectoryBuilder(new Pose2d())
-                .forward(15.393701)
-                .build();
-        Trajectory forwad4Zones = drive.trajectoryBuilder(moveToSignal.end())
-                .forward(14)
-                .build();
-        Trajectory moveToM1 = drive.trajectoryBuilder(forwad4Zones.end())
-                .strafeLeft(15)
-                .build();
-        Trajectory strafeTo1 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeLeft(12)
-                .build();
-        Trajectory backTo2 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(15)
-                .build();
-        Trajectory strafeTo3 = drive.trajectoryBuilder(moveToM1.end())
-                .strafeRight(4+
-                        2)
-                .build();
+        rightClaw.setDirection(Servo.Direction.FORWARD);
+        // camera stuff
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        // With live preview
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
+        pipeline = new Pipeline();
+        camera.setPipeline(pipeline);
 
+        // IMPORTANT: these are the directions we move and whether we strafe or move forward or
+        // turn. They use inches. For spline to line heading X and Y are inverted from normal
+        // coordinate plane
+        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
+                .forward(40)
+                .splineToLinearHeading(new Pose2d(-14,18), 0)
+                .build();
+        Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
+                .splineToLinearHeading(new Pose2d(-18, 36, Math.toRadians(0)), 0)
+                .build();
+        Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
+                .splineToLinearHeading(new Pose2d(-12, 58, Math.toRadians(-90)), 0)
+                .build();
+        Trajectory H1 = drive.trajectoryBuilder(ToCone.end())
+                .splineToLinearHeading(new Pose2d(-12, 0, Math.toRadians(-180)), 0)
+                .build();
+//        Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
+//                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
+//                .build();
+        Trajectory BeganH1 = drive.trajectoryBuilder(H1.end())
+                .splineToLinearHeading(new Pose2d(-14, -36, Math.toRadians(0)), 0)
+                .build();
+        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
+                .splineToLinearHeading(new Pose2d(-45,-36, Math.toRadians(0)),0)
+                .build();
+        Trajectory zone1 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-45, -12, Math.toRadians(0)),0)
+                .build();
+        Trajectory zone2 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-43,-36, Math.toRadians(0)),0)
+                .build();
+        Trajectory zone3 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-45, -70, Math.toRadians(0)),0)
+                .build();
         waitForStart();
-
-        // closes claw
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.4);
-        sleep(500);
-        // telemetry
-        telemetry.addData("Alpha: ", colorSensor.alpha());
-        telemetry.addData("Blue: ", colorSensor.blue());
-        telemetry.addData("Red: ", colorSensor.red());
-        telemetry.addData("Green: ", colorSensor.green());
-        telemetry.addData("argb; ", colorSensor.argb());
-        telemetry.addData("target position: ", targetPosition);
-
+        drive.setPoseEstimate(new Pose2d(-63, -36 , 0));
+        // Gets sleeve value
+        pipelineValue = pipeline.getMeanCbValue();
+        telemetry.addData("Pipleine value", pipelineValue);
         telemetry.update();
-        // move slide
+        //close claw
+        rightClaw.setPosition(1);
+        leftClaw.setPosition(0.3);
+        sleep(450);
+        // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 38.0 && runTime.seconds()<2) {
-            slidePower = moveSlide(currentPosition, 38);
+        while (currentPosition < 42.0 && runTime.seconds()<.01) {
+            slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        //stop moving slide after while loop
-        slideMotor.setPower(0);
-
-        // Goes to signal sleeve
-        drive.followTrajectory(moveToSignal);
-        redValue = colorSensor.red();
-        blueValue = colorSensor.blue();
-        greenValue = colorSensor.green();
-        alphaValue = colorSensor.alpha();
-        telemetry.addData("Blue: ", colorSensor.blue());
-        telemetry.addData("Red: ", colorSensor.red());
-        telemetry.addData("Green: ", colorSensor.green());
-        telemetry.addData("argb" , colorSensor.argb());
-        telemetry.addData("Distance: " , distanceSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
-        // prepares for the zones
-        drive.followTrajectory(forwad4Zones);
-        // uses trajectory from earlier to move
-        drive.followTrajectory(moveToM1);
-        sleep(500);
+        // Goes to the high junction 3
+        drive.followTrajectory(moveToH3);
+        // Lowers slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-
-        while (currentPosition > 15.0 && runTime.seconds()<5) {
-            slidePower = moveSlide(currentPosition, 15);
+        while (currentPosition > 29.0 && runTime.seconds()<.50) {
+            slidePower = moveSlide(currentPosition, 29);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // opens claw
-        leftClaw.setPosition(.7);
+        leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
-        sleep(100);
-        // raise slide after putting down cone
+        // We center on the tile so we can turn without hitting anything
+        drive.followTrajectory(beginToStack);
+        // lowers slide before we turn so we don't hit anything
+        // Closes claw slightly so we don't hit the phone
+        rightClaw.setPosition(.8);
+        leftClaw.setPosition(.45);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 10.0 && runTime.seconds()<1.5) {
-            slidePower = moveSlide(currentPosition, 10);
+        while (currentPosition > 5.0 && runTime.seconds()<.75) {
+            slidePower = moveSlide(currentPosition, 5);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-
-        if (blueValue < 75 && greenValue > 85) {
-            // color green
-            drive.followTrajectory(strafeTo1);
-        }
-        else if (blueValue < 75 && greenValue < 90){
-            // color brown
-            drive.followTrajectory(backTo2);
-        }
-        else if (blueValue > 100 && redValue > 70) {
-            // color pink
-            drive.followTrajectory(strafeTo3);
-        }
-
+        // heads to cones
+        drive.followTrajectory(ToCone);
+        // closes the claw
+        rightClaw.setPosition(1);
+        leftClaw.setPosition(0.3);
+        sleep(500);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 0.0 && runTime.seconds()<1.5) {
+        while (currentPosition < 42 && runTime.seconds()<0.6) {
+            slidePower = moveSlide(currentPosition, 42);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        // heads to L3
+        drive.followTrajectory(H1);
+        //Lowers the slide so we can place a cone
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 5.0 && runTime.seconds()<.5) {
+            slidePower = moveSlide(currentPosition, 5);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        //opens the claw
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
+        // lowers the slide to get the cone more consistent
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition < 7 && runTime.seconds()<.6) {
+            slidePower = moveSlide(currentPosition, 7);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+//        // heads back to the cones
+//        drive.followTrajectory(ToCone2);
+//        // closes the claw
+//        leftClaw.setPosition(.3);
+//        rightClaw.setPosition(1);
+//        sleep(350);
+//        // raises the slide all the way
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition < 42.0 && runTime.seconds()<1) {
+//            slidePower = moveSlide(currentPosition, 42);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+        // heads to the high Junction 1
+        drive.followTrajectory(BeganH1);
+        // finishes heading to the High junction 1
+        drive.followTrajectory(finishH1);
+        // lowers the slide for half a second
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 15.0 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 15);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
+        //opens the claw
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
+        // lowers the slide So its not messed up in teleop
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 0 && runTime.seconds()<1) {
             slidePower = moveSlide(currentPosition, 0);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
+        // park stuff
+        if  (pipelineValue <= 138){
+            // color green
+            drive.followTrajectory(zone1);
+        }
+        else if (pipelineValue >= 147){
+            // color Purple
+            drive.followTrajectory(zone2);
+        }
+        else if (pipelineValue < 147 && pipelineValue >138){
+            // color pink
+            drive.followTrajectory(zone3);
+        }
     }
     //slide variable
     private double moveSlide (double currentPosition , double targetPosition) {

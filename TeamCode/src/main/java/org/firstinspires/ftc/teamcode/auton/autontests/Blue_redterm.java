@@ -78,7 +78,7 @@ public class Blue_redterm extends LinearOpMode {
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or
         // turn. They use inches. For spline to line heading X and Y are inverted from normal
         // coordinate plane
-        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , -36 , 0))
+        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
                 .forward(40)
                 .splineToLinearHeading(new Pose2d(-14,18), 0)
                 .build();
@@ -161,14 +161,13 @@ public class Blue_redterm extends LinearOpMode {
         sleep(500);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 13 && runTime.seconds()<0.6) {
-            slidePower = moveSlide(currentPosition, 13);
+        while (currentPosition < 42 && runTime.seconds()<0.6) {
+            slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to L3
-        drive.followTrajectory(BeginL3);
-        drive.followTrajectory(FinishL3);
+        drive.followTrajectory(H1);
         //Lowers the slide so we can place a cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
