@@ -60,6 +60,9 @@ public class fieldSentricTeleop extends LinearOpMode {
                 yVal *= 0.3;
                 angleVal *= 0.3;
             }
+            if (gamepad1.b) {
+                drive.setPoseEstimate(new Pose2d(0, 0, 0));
+            }
 
             Vector2d input = new Vector2d(
                     xVal,

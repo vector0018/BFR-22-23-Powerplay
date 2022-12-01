@@ -1,6 +1,4 @@
-/*
 package org.firstinspires.ftc.teamcode.auton.autontests;
-
 
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
@@ -22,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name =  "Blue Red Term" )
+@Autonomous(name =  "Blue Left" )
 public class Blue_redterm extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -80,40 +78,36 @@ public class Blue_redterm extends LinearOpMode {
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or
         // turn. They use inches. For spline to line heading X and Y are inverted from normal
         // coordinate plane
-        // in this auton x is negative and y is positive
-        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
+        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , -36 , 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-14,24), 0)
+                .splineToLinearHeading(new Pose2d(-14,18), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
-                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(0)), 0)
+                .splineToLinearHeading(new Pose2d(-18, 36, Math.toRadians(0)), 0)
                 .build();
         Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
+                .splineToLinearHeading(new Pose2d(-12, 58, Math.toRadians(-90)), 0)
                 .build();
-        Trajectory RedoH2 = drive.trajectoryBuilder(ToCone.end())
-                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(-90)), 0)
+        Trajectory H1 = drive.trajectoryBuilder(ToCone.end())
+                .splineToLinearHeading(new Pose2d(-12, 0, Math.toRadians(-180)), 0)
                 .build();
-        Trajectory finishH2PT2 = drive.trajectoryBuilder(RedoH2.end())
-                .splineToLinearHeading(new Pose2d(-14,24, Math.toRadians(0)), 0)
+//        Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
+//                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
+//                .build();
+        Trajectory BeganH1 = drive.trajectoryBuilder(H1.end())
+                .splineToLinearHeading(new Pose2d(-14, -36, Math.toRadians(0)), 0)
                 .build();
-        Trajectory ToCone2 = drive.trajectoryBuilder(finishH2PT2.end())
-                .splineToLinearHeading(new Pose2d(-14, 36, Math.toRadians(0)), 0)
+        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
+                .splineToLinearHeading(new Pose2d(-45,-36, Math.toRadians(0)),0)
                 .build();
-        Trajectory headingToStack = drive.trajectoryBuilder(ToCone2.end())
-                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
+        Trajectory zone1 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-45, -12, Math.toRadians(0)),0)
                 .build();
-        Trajectory ToCone3 = drive.trajectoryBuilder(headingToStack.end())
-                .splineToLinearHeading(new Pose2d(-12, 55, Math.toRadians(-90)), 0)
+        Trajectory zone2 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-43,-36, Math.toRadians(0)),0)
                 .build();
-        Trajectory zone1 = drive.trajectoryBuilder(ToCone3.end())
-                .splineToLinearHeading(new Pose2d(-36, -12, Math.toRadians(0)),0)
-                .build();
-        Trajectory zone2 = drive.trajectoryBuilder(ToCone3.end())
-                .splineToLinearHeading(new Pose2d(-36, -36, Math.toRadians(0)),0)
-                .build();
-        Trajectory zone3 = drive.trajectoryBuilder(ToCone3.end())
-                .splineToLinearHeading(new Pose2d(-36, -60, Math.toRadians(0)),0)
+        Trajectory zone3 = drive.trajectoryBuilder(finishH1.end())
+                .splineToLinearHeading(new Pose2d(-45, -70, Math.toRadians(0)),0)
                 .build();
         waitForStart();
         drive.setPoseEstimate(new Pose2d(-63, -36 , 0));
@@ -128,7 +122,7 @@ public class Blue_redterm extends LinearOpMode {
         // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<.5) {
+        while (currentPosition < 42.0 && runTime.seconds()<.01) {
             slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -138,7 +132,7 @@ public class Blue_redterm extends LinearOpMode {
         // Lowers slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 29.0 && runTime.seconds()<.75) {
+        while (currentPosition > 29.0 && runTime.seconds()<.50) {
             slidePower = moveSlide(currentPosition, 29);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -154,7 +148,7 @@ public class Blue_redterm extends LinearOpMode {
         leftClaw.setPosition(.45);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5.0 && runTime.seconds()<1) {
+        while (currentPosition > 5.0 && runTime.seconds()<.75) {
             slidePower = moveSlide(currentPosition, 5);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -173,8 +167,8 @@ public class Blue_redterm extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to L3
-//        drive.followTrajectory(BeginL3);
-//        drive.followTrajectory(FinishL3);
+        drive.followTrajectory(BeginL3);
+        drive.followTrajectory(FinishL3);
         //Lowers the slide so we can place a cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
@@ -194,39 +188,39 @@ public class Blue_redterm extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
-        // heads back to the cones
-        drive.followTrajectory(ToCone2);
-        // closes the claw
-        leftClaw.setPosition(.3);
-        rightClaw.setPosition(1);
-        sleep(350);
-        // raises the slide all the way
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<1) {
-            slidePower = moveSlide(currentPosition, 42);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
+//        // heads back to the cones
+//        drive.followTrajectory(ToCone2);
+//        // closes the claw
+//        leftClaw.setPosition(.3);
+//        rightClaw.setPosition(1);
+//        sleep(350);
+//        // raises the slide all the way
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition < 42.0 && runTime.seconds()<1) {
+//            slidePower = moveSlide(currentPosition, 42);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
         // heads to the high Junction 1
-//        drive.followTrajectory(BeganH1);
+        drive.followTrajectory(BeganH1);
         // finishes heading to the High junction 1
-//        drive.followTr ajectory(finishH1);
+        drive.followTrajectory(finishH1);
         // lowers the slide for half a second
-        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        runTime.reset();
-        while (currentPosition > 15.0 && runTime.seconds()<.5) {
-            slidePower = moveSlide(currentPosition, 15);
-            slideMotor.setPower(slidePower);
-            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
-        }
+//        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        runTime.reset();
+//        while (currentPosition > 15.0 && runTime.seconds()<.5) {
+//            slidePower = moveSlide(currentPosition, 15);
+//            slideMotor.setPower(slidePower);
+//            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+//        }
         //opens the claw
-        leftClaw.setPosition(.5);
+        leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
         // lowers the slide So its not messed up in teleop
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 0 && runTime.seconds()<2) {
+        while (currentPosition > 0 && runTime.seconds()<1) {
             slidePower = moveSlide(currentPosition, 0);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -276,4 +270,3 @@ public class Blue_redterm extends LinearOpMode {
         return slidePower;
     }
 }
- */
