@@ -79,9 +79,9 @@ public class RedLeft extends LinearOpMode {
         // IMPORTANT: these are the directions we move and whether we strafe or move forward or
         // turn. They use inches. For spline to line heading X and Y are inverted from normal
         // coordinate plane
-        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , 36 , 0))
+        Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-56 , 34, 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-14,18), 0)
+                .splineToLinearHeading(new Pose2d(-13,13), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
                 .splineToLinearHeading(new Pose2d(-18, 36, Math.toRadians(0)), 0)
@@ -114,7 +114,7 @@ public class RedLeft extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-36, 60, Math.toRadians(0)),0)
                 .build();
         waitForStart();
-        drive.setPoseEstimate(new Pose2d(-63, 36 , 0));
+        drive.setPoseEstimate(new Pose2d(-56, 34 , 0));
         // Gets sleeve value
         pipelineValue = pipeline.getMeanCbValue();
         telemetry.addData("Pipleine value", pipelineValue);

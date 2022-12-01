@@ -171,8 +171,8 @@ public class Blue_redterm extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to L3
-        drive.followTrajectory(BeginL3);
-        drive.followTrajectory(FinishL3);
+//        drive.followTrajectory(BeginL3);
+//        drive.followTrajectory(FinishL3);
         //Lowers the slide so we can place a cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
@@ -207,9 +207,9 @@ public class Blue_redterm extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to the high Junction 1
-        drive.followTrajectory(BeganH1);
+//        drive.followTrajectory(BeganH1);
         // finishes heading to the High junction 1
-        drive.followTrajectory(finishH1);
+//        drive.followTr ajectory(finishH1);
         // lowers the slide for half a second
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
