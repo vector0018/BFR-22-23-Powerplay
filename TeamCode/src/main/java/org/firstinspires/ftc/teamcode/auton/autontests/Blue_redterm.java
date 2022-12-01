@@ -1,4 +1,6 @@
+/*
 package org.firstinspires.ftc.teamcode.auton.autontests;
+
 
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.hardware.SlideConstants.maxTargetPosition;
@@ -274,3 +276,4 @@ public class Blue_redterm extends LinearOpMode {
         return slidePower;
     }
 }
+ */
