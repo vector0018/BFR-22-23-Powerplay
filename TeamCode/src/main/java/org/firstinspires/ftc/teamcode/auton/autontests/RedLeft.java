@@ -81,10 +81,10 @@ public class RedLeft extends LinearOpMode {
         // coordinate plane
         Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-56 , 34, 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-13,13), 0)
+                .splineToLinearHeading(new Pose2d(-11,17), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
-                .splineToLinearHeading(new Pose2d(-18, 36, Math.toRadians(0)), 0)
+                .splineToLinearHeading(new Pose2d(-15, 32, Math.toRadians(0)), 0)
                 .build();
         Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
                 .splineToLinearHeading(new Pose2d(-12, 58, Math.toRadians(90)), 0)
@@ -122,7 +122,7 @@ public class RedLeft extends LinearOpMode {
         //close claw
         rightClaw.setPosition(1);
         leftClaw.setPosition(0.3);
-        sleep(450);
+        sleep(500);
         // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
