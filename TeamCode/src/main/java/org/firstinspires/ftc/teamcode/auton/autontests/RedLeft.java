@@ -86,17 +86,23 @@ public class RedLeft extends LinearOpMode {
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
                 .splineToLinearHeading(new Pose2d(-12, 32, Math.toRadians(0)), 0)
                 .build();
-        Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-7, 58, Math.toRadians(90)), 0)
+        Trajectory turnForStack = drive.trajectoryBuilder(beginToStack.end())
+                .splineToLinearHeading(new Pose2d(-12, 33, Math.toRadians(90)), 0)
+                .build();
+        Trajectory ToCone = drive.trajectoryBuilder(turnForStack.end())
+                .splineToLinearHeading(new Pose2d(-7, 51, Math.toRadians(90)), 0)
                 .build();
         Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
-                .splineToLinearHeading(new Pose2d(-12, 40, Math.toRadians(90)), 0)
+                .splineToLinearHeading(new Pose2d(-10, 40, Math.toRadians(90)), 0)
                 .build();
-        Trajectory FinishL3 = drive.trajectoryBuilder(BeginL3.end())
-                .splineToLinearHeading(new Pose2d(-14, 53, Math.toRadians(-180)), 0)
+        Trajectory strafeRight = drive.trajectoryBuilder(BeginL3.end())
+                .strafeRight(8)
+                .build();
+        Trajectory FinishL3 = drive.trajectoryBuilder(strafeRight.end())
+                .splineToLinearHeading(new Pose2d(-12, 46, Math.toRadians(-180)), 0)
                 .build();
         Trajectory zone1 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-36, 12, Math.toRadians(0)),0)
+                .splineToLinearHeading(new Pose2d(-32, 8, Math.toRadians(0)),0)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(FinishL3.end())
                 .splineToLinearHeading(new Pose2d(-36, 36, Math.toRadians(0)),0)
@@ -137,14 +143,15 @@ public class RedLeft extends LinearOpMode {
         rightClaw.setPosition(.7);
         // We center on the tile so we can turn without hitting anything
         drive.followTrajectory(beginToStack);
+        drive.followTrajectory(turnForStack);
         // lowers slide before we turn so we don't hit anything
         // Closes claw slightly so we don't hit the phone
         rightClaw.setPosition(.8);
         leftClaw.setPosition(.45);
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5.0 && runTime.seconds()<1) {
-            slidePower = moveSlide(currentPosition, 5);
+        while (currentPosition >4.0 && runTime.seconds()<1) {
+            slidePower = moveSlide(currentPosition, 4);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -161,6 +168,7 @@ public class RedLeft extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
+        drive.followTrajectory(strafeRight);
         // heads to L3
         drive.followTrajectory(BeginL3);
         drive.followTrajectory(FinishL3);
