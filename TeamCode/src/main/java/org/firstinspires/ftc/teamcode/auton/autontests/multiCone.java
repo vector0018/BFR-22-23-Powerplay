@@ -121,7 +121,7 @@ public class multiCone extends LinearOpMode {
         //close claw
         rightClaw.setPosition(1);
         leftClaw.setPosition(0.3);
-        sleep(450);
+        sleep(600);
         // Raise slide
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
