@@ -83,33 +83,33 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-14,-18), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
-                .splineToLinearHeading(new Pose2d(-18, -36, Math.toRadians(0)), 0)
+                .splineToLinearHeading(new Pose2d(-22, -36, Math.toRadians(0)), 0)
+                .build();
+        Trajectory towardsStack = drive.trajectoryBuilder(beginToStack.end())
+                .splineToLinearHeading(new Pose2d(-19,-37, Math.toRadians(-90)), 0)
                 .build();
         Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-12, -58, Math.toRadians(-90)), 0)
+                .splineToLinearHeading(new Pose2d(-16, -56, Math.toRadians(-90)), 0)
                 .build();
         Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
                 .splineToLinearHeading(new Pose2d(-12, -40, Math.toRadians(-90)), 0)
                 .build();
         Trajectory FinishL3 = drive.trajectoryBuilder(BeginL3.end())
-                .splineToLinearHeading(new Pose2d(-15, -53, Math.toRadians(180)), 0)
+                .splineToLinearHeading(new Pose2d(-15, -51, Math.toRadians(180)), 0)
+                .build();
+        Trajectory centerRobot = drive.trajectoryBuilder(FinishL3.end())
+                .splineToLinearHeading(new Pose2d(-15, -34, Math.toRadians(180)), 0)
                 .build();
 //        Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
 //                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
 //                .build();
-        Trajectory BeganH1 = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-14, -36, Math.toRadians(0)), 0)
-                .build();
-        Trajectory finishH1 = drive.trajectoryBuilder(BeganH1.end())
-                .splineToLinearHeading(new Pose2d(-45,-36, Math.toRadians(0)),0)
-                .build();
-        Trajectory zone1 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone1 = drive.trajectoryBuilder(centerRobot.end())
                 .splineToLinearHeading(new Pose2d(-45, -12, Math.toRadians(0)),0)
                 .build();
-        Trajectory zone2 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone2 = drive.trajectoryBuilder(centerRobot.end())
                 .splineToLinearHeading(new Pose2d(-43,-36, Math.toRadians(0)),0)
                 .build();
-        Trajectory zone3 = drive.trajectoryBuilder(finishH1.end())
+        Trajectory zone3 = drive.trajectoryBuilder(centerRobot.end())
                 .splineToLinearHeading(new Pose2d(-45, -70, Math.toRadians(0)),0)
                 .build();
         waitForStart();
@@ -157,6 +157,7 @@ public class multiCone extends LinearOpMode {
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
         // heads to cones
+        drive.followTrajectory(towardsStack);
         drive.followTrajectory(ToCone);
         // closes the claw
         rightClaw.setPosition(1);
@@ -205,10 +206,10 @@ public class multiCone extends LinearOpMode {
 //            slideMotor.setPower(slidePower);
 //            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
 //        }
-        // heads to the high Junction 1
-        drive.followTrajectory(BeganH1);
+        // heads to the high Junction 13
+//        drive.followTrajectory(BeganH1);
         // finishes heading to the High junction 1
-        drive.followTrajectory(finishH1);
+//        drive.followTrajectory(finishH1);
         // lowers the slide for half a second
 //        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
 //        runTime.reset();
@@ -228,17 +229,19 @@ public class multiCone extends LinearOpMode {
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
+        //heads to center itself at zone 2
+        drive.followTrajectory(centerRobot);
 
         // park stuff
         if  (pipelineValue <= 138){
             // color green
             drive.followTrajectory(zone1);
         }
-        else if (pipelineValue >= 147){
+        else if (pipelineValue >= 146){
             // color Purple
             drive.followTrajectory(zone2);
         }
-        else if (pipelineValue < 147 && pipelineValue >138){
+        else if (pipelineValue < 146 && pipelineValue >138){
             // color pink
             drive.followTrajectory(zone3);
         }
