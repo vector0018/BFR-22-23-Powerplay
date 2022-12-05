@@ -80,7 +80,7 @@ public class multiCone extends LinearOpMode {
         // coordinate plane
         Trajectory moveToH3 = drive.trajectoryBuilder(new Pose2d(-63 , -36 , 0))
                 .forward(40)
-                .splineToLinearHeading(new Pose2d(-14,-18), 0)
+                .splineToLinearHeading(new Pose2d(-16,-18), 0)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(moveToH3.end())
                 .splineToLinearHeading(new Pose2d(-22, -36, Math.toRadians(0)), 0)
@@ -89,7 +89,7 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-19,-37, Math.toRadians(-90)), 0)
                 .build();
         Trajectory ToCone = drive.trajectoryBuilder(beginToStack.end())
-                .splineToLinearHeading(new Pose2d(-16, -56, Math.toRadians(-90)), 0)
+                .splineToLinearHeading(new Pose2d(-16, -57, Math.toRadians(-90)), 0)
                 .build();
         Trajectory BeginL3 = drive.trajectoryBuilder(ToCone.end())
                 .splineToLinearHeading(new Pose2d(-12, -40, Math.toRadians(-90)), 0)
@@ -98,19 +98,19 @@ public class multiCone extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-15, -51, Math.toRadians(180)), 0)
                 .build();
         Trajectory centerRobot = drive.trajectoryBuilder(FinishL3.end())
-                .splineToLinearHeading(new Pose2d(-15, -34, Math.toRadians(180)), 0)
+                .splineToLinearHeading(new Pose2d(-14, -34, Math.toRadians(180)), 0)
                 .build();
 //        Trajectory ToCone2 = drive.trajectoryBuilder(FinishL3.end())
 //                .splineToLinearHeading(new Pose2d(-12, -60, Math.toRadians(-90)), 0)
 //                .build();
         Trajectory zone1 = drive.trajectoryBuilder(centerRobot.end())
-                .splineToLinearHeading(new Pose2d(-45, -12, Math.toRadians(0)),0)
+                .splineToLinearHeading(new Pose2d(-22, -12, Math.toRadians(0)),0)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(centerRobot.end())
-                .splineToLinearHeading(new Pose2d(-43,-36, Math.toRadians(0)),0)
+                .splineToLinearHeading(new Pose2d(-22,-36, Math.toRadians(0)),0)
                 .build();
         Trajectory zone3 = drive.trajectoryBuilder(centerRobot.end())
-                .splineToLinearHeading(new Pose2d(-45, -70, Math.toRadians(0)),0)
+                .splineToLinearHeading(new Pose2d(-22, -70, Math.toRadians(0)),0)
                 .build();
         waitForStart();
         drive.setPoseEstimate(new Pose2d(-63, -36 , 0));
@@ -143,6 +143,7 @@ public class multiCone extends LinearOpMode {
         // opens claw
         leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
+        sleep(300);
         // We center on the tile so we can turn without hitting anything
         drive.followTrajectory(beginToStack);
         // lowers slide before we turn so we don't hit anything

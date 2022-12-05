@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp (name = "Field Centric")
-public class fieldSentricTeleop extends LinearOpMode {
+@TeleOp (name = "Field Sentric but I can't spell")
+public class fieldSentricPart2 extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
@@ -59,9 +59,6 @@ public class fieldSentricTeleop extends LinearOpMode {
                 xVal *= 0.3;
                 yVal *= 0.3;
                 angleVal *= 0.3;
-            }
-            if (gamepad1.b) {
-                drive.setPoseEstimate(new Pose2d(0, 0, 0));
             }
 
             Vector2d input = new Vector2d(
