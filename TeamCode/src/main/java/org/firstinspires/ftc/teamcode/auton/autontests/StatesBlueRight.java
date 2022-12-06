@@ -100,7 +100,24 @@ public class StatesBlueRight extends LinearOpMode {
         Trajectory finishStack = drive.trajectoryBuilder(beginToStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
             .forward(20)
             .build();
-
+        Trajectory backTowardsL3 = drive.trajectoryBuilder(finishStack.end())
+            .back(19)
+            .build();
+        Trajectory finishL3 = drive.trajectoryBuilder(backTowardsL3.end())
+            .strafeRight(15)
+            .build();
+        Trajectory backAwayFromL3 = drive.trajectoryBuilder(finishL3.end())
+            .back(2)
+            .build();
+        Trajectory strafeToParkPos = drive.trajectoryBuilder(backAwayFromL3.end())
+            .strafeRight(15)
+            .build();
+        Trajectory zone1 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
+            .strafeLeft(28)
+            .build();
+        Trajectory zone3 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
+            .strafeRight(28)
+            .build();
     waitForStart();
 
         // Gets sleeve value
@@ -139,7 +156,6 @@ public class StatesBlueRight extends LinearOpMode {
         // Open Claw
         leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
-        sleep(450);
 
         // Begins to stack
         drive.followTrajectory(beginToStack);
@@ -150,10 +166,10 @@ public class StatesBlueRight extends LinearOpMode {
         leftClaw.setPosition(.45);
 
         // Lowers the slide for the cone
-         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5.0 && runTime.seconds()<.75) {
-            slidePower = moveSlide(currentPosition, 5);
+        while (currentPosition > 6.0 && runTime.seconds()<.5) {
+            slidePower = moveSlide(currentPosition, 6);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -173,11 +189,57 @@ public class StatesBlueRight extends LinearOpMode {
             slidePower = moveSlide(currentPosition, 13);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+        drive.followTrajectory(backTowardsL3);
+        drive.followTrajectory(finishL3);
+        // Raises the slide for the Junction
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 5 && runTime.seconds()<.75) {
+            slidePower = moveSlide(currentPosition, 5);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
 
-            /*TODO: tell robot to go back, then strafe right, place cone, strafe right again, turn and park*/
+        // Open Claw
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
+
+        drive.followTrajectory(backAwayFromL3);
+        drive.followTrajectory(strafeToParkPos);
+
+        // Lowers the slide for the cone
+        currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        runTime.reset();
+        while (currentPosition > 0 && runTime.seconds()<.01) {
+            slidePower = moveSlide(currentPosition, 0);
+            slideMotor.setPower(slidePower);
+            currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
+        }
+
+        drive.turn(Math.toRadians(90));
+
+        // Reduce Claw Angle
+        leftClaw.setPosition(.5);
+        rightClaw.setPosition(.8);
+
+        // park stuff
+        if  (pipelineValue <= 138){
+            // color green
+            drive.followTrajectory(zone1);
+        }
+        else if (pipelineValue >= 145){
+            // color Purple
+        }
+        else if (pipelineValue < 145 && pipelineValue >138){
+            // color pink
+            drive.followTrajectory(zone3);
         }
     }
-    //slide variable
+
+
+
+    //calculate slide power
     private double moveSlide (double currentPosition , double targetPosition) {
         double Kp = 0.2;
         double positionError;
