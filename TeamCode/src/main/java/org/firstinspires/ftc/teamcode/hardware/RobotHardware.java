@@ -20,7 +20,6 @@ public class RobotHardware {
         return instance;
     }
 
-    public SampleMecanumDrive drive;
     public Slide slide;
     public Claw claw;
 
@@ -34,14 +33,15 @@ public class RobotHardware {
 
         subsystems.clear();
 
-        drive = new SampleMecanumDrive(map);
-        subsystems.add(drive);
-
         slide = new Slide(map);
         subsystems.add(slide);
 
         claw = new Claw(map);
         subsystems.add(claw);
+
+        for(Subsystem subsystem: subsystems){
+            subsystem.initialize(map, telemetry);
+        }
     }
 
     public void sendTelemetry(Telemetry telemetry) {

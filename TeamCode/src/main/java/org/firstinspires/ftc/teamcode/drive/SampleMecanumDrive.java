@@ -54,7 +54,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
+public class SampleMecanumDrive extends MecanumDrive{
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 0.5);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(5.5, 0, 0.5);
 
@@ -316,15 +316,5 @@ public class SampleMecanumDrive extends MecanumDrive implements Subsystem {
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
-    }
-
-    @Override
-    public void initialize(HardwareMap map, Telemetry telemetry) {
-
-    }
-
-    @Override
-    public void sendTelemetry(Telemetry telemetry) {
-
     }
 }

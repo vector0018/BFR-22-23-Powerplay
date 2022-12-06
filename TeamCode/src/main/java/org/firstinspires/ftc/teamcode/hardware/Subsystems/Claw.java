@@ -50,17 +50,28 @@ public class Claw implements Subsystem{
     }
 
     public void openClaw(){
-        leftClaw.setPosition(.7);
+        leftClaw.setPosition(.6);
         rightClaw.setPosition(.7);
     }
 
     public void closeClaw(){
-        rightClaw.setPosition(0.5);
-        leftClaw.setPosition(0.4);
+        leftClaw.setPosition(0.3);
+        rightClaw.setPosition(1);
     }
 
     public void fullyOpenClaw(){
         leftClaw.setPosition(.9);
         rightClaw.setPosition(.9);
+    }
+    public void setLeftClawPos(double leftClawPos){
+        leftClaw.setPosition(leftClawPos);
+    }
+
+    public void setRightClawPos(double rightClawPos){
+        rightClaw.setPosition(rightClawPos);
+    }
+    public void smallOpen(){
+        rightClaw.setPosition(.8);
+        leftClaw.setPosition(.45);
     }
 }

@@ -15,7 +15,7 @@ public class FieldCentricTeleopRH extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
         RobotHardware robot = RobotHardware.getInstance();
-        SampleMecanumDrive drive = robot.drive;
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Slide slide = robot.slide;
         Claw claw = robot.claw;
 
