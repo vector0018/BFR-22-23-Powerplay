@@ -25,8 +25,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name = "Blue Right States")
-public class StatesBlueRight extends LinearOpMode {
+@Autonomous(name = "Red left States")
+public class StatesRedLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // listing the things
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -92,10 +92,10 @@ public class StatesBlueRight extends LinearOpMode {
                 .back(8)
                 .build();
         Trajectory finishH3 = drive.trajectoryBuilder(backForH3.end())
-                .strafeLeft(15)
+                .strafeRight(15)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(finishH3.end())
-                .strafeRight(15)
+                .strafeLeft(15)
                 .build();
         Trajectory finishStack = drive.trajectoryBuilder(beginToStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
                 .forward(20)
@@ -104,19 +104,19 @@ public class StatesBlueRight extends LinearOpMode {
                 .back(19)
                 .build();
         Trajectory finishL3 = drive.trajectoryBuilder(backTowardsL3.end())
-                .strafeRight(15)
+                .strafeLeft(15)
                 .build();
         Trajectory backAwayFromL3 = drive.trajectoryBuilder(finishL3.end())
                 .back(2)
                 .build();
         Trajectory strafeToParkPos = drive.trajectoryBuilder(backAwayFromL3.end())
-                .strafeRight(15)
+                .strafeLeft(15)
                 .build();
         Trajectory zone1 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
-                .strafeLeft(28)
+                .strafeRight(28)
                 .build();
         Trajectory zone3 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
-                .strafeRight(28)
+                .strafeLeft(28)
                 .build();
         waitForStart();
 
@@ -195,15 +195,15 @@ public class StatesBlueRight extends LinearOpMode {
         // Raises the slide for the Junction
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5 && runTime.seconds() <.75) {
+        while (currentPosition > 5 && runTime.seconds()<.75) {
             slidePower = moveSlide(currentPosition, 5);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
         // Open Claw
-        leftClaw.setPosition(.5);
-        rightClaw.setPosition(.8);
+        leftClaw.setPosition(.6);
+        rightClaw.setPosition(.7);
 
         drive.followTrajectory(backAwayFromL3);
         drive.followTrajectory(strafeToParkPos);
@@ -218,6 +218,10 @@ public class StatesBlueRight extends LinearOpMode {
         }
 
         drive.turn(Math.toRadians(90));
+
+        // Reduce Claw Angle
+        leftClaw.setPosition(.5);
+        rightClaw.setPosition(.8);
 
         // park stuff
         if  (pipelineValue <= 138){
