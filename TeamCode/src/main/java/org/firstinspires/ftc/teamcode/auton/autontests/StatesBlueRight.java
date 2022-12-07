@@ -195,15 +195,15 @@ public class StatesBlueRight extends LinearOpMode {
         // Raises the slide for the Junction
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5 && runTime.seconds()<.75) {
+        while (currentPosition > 5 && runTime.seconds() <.75) {
             slidePower = moveSlide(currentPosition, 5);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
 
         // Open Claw
-        leftClaw.setPosition(.6);
-        rightClaw.setPosition(.7);
+        leftClaw.setPosition(.5);
+        rightClaw.setPosition(.8);
 
         drive.followTrajectory(backAwayFromL3);
         drive.followTrajectory(strafeToParkPos);
@@ -218,10 +218,6 @@ public class StatesBlueRight extends LinearOpMode {
         }
 
         drive.turn(Math.toRadians(90));
-
-        // Reduce Claw Angle
-        leftClaw.setPosition(.5);
-        rightClaw.setPosition(.8);
 
         // park stuff
         if  (pipelineValue <= 138){
