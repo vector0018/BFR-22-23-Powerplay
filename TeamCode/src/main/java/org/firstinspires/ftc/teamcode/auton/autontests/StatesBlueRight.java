@@ -168,7 +168,7 @@ public class StatesBlueRight extends LinearOpMode {
         // Lowers the slide for the cone
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 6.0 && runTime.seconds()<.5) {
+        while (currentPosition > 6.0 && runTime.seconds()<.75) {
             slidePower = moveSlide(currentPosition, 6);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -185,8 +185,8 @@ public class StatesBlueRight extends LinearOpMode {
         // Raises the slide for the Junction
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 13.0 && runTime.seconds()<.75) {
-            slidePower = moveSlide(currentPosition, 13);
+        while (currentPosition < 14.0 && runTime.seconds()<.75) {
+            slidePower = moveSlide(currentPosition, 14);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -195,7 +195,7 @@ public class StatesBlueRight extends LinearOpMode {
         // Raises the slide for the Junction
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition > 5 && runTime.seconds() <.75) {
+        while (currentPosition > 5 && runTime.seconds()<.75) {
             slidePower = moveSlide(currentPosition, 5);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -231,13 +231,15 @@ public class StatesBlueRight extends LinearOpMode {
             // color pink
             drive.followTrajectory(zone3);
         }
+        slideMotor.setPower(0);
+        sleep(500);
     }
 
 
 
     //calculate slide power
     private double moveSlide (double currentPosition , double targetPosition) {
-        double Kp = 0.2;
+        double Kp = 0.5;
         double positionError;
         double slidePower;
 
@@ -265,4 +267,3 @@ public class StatesBlueRight extends LinearOpMode {
         return slidePower;
     }
 }
-
