@@ -133,7 +133,7 @@ public class StatesRedLeft extends LinearOpMode {
         // Raise slide - we only do .01 seconds because starts raising slide, after .01 seconds the robot will move as slide is raised.
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 42.0 && runTime.seconds()<.01) {
+        while (currentPosition < 42.0 && runTime.seconds()<.5) {
             slidePower = moveSlide(currentPosition, 42);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
@@ -185,8 +185,8 @@ public class StatesRedLeft extends LinearOpMode {
         // Raises the slide for the Junction
         currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         runTime.reset();
-        while (currentPosition < 13.0 && runTime.seconds()<.75) {
-            slidePower = moveSlide(currentPosition, 13);
+        while (currentPosition < 14.0 && runTime.seconds()<.75) {
+            slidePower = moveSlide(currentPosition, 14);
             slideMotor.setPower(slidePower);
             currentPosition = encoderTicksToInches(slideMotor.getCurrentPosition()) - zeroPos;
         }
@@ -231,13 +231,16 @@ public class StatesRedLeft extends LinearOpMode {
             // color pink
             drive.followTrajectory(zone3);
         }
+
+        slideMotor.setPower(0);
+        sleep(100);
     }
 
 
 
     //calculate slide power
     private double moveSlide (double currentPosition , double targetPosition) {
-        double Kp = 0.2;
+        double Kp = 0.5;
         double positionError;
         double slidePower;
 
@@ -262,6 +265,7 @@ public class StatesRedLeft extends LinearOpMode {
         if (slidePower < -1) {
             slidePower = -1;
         }
+
         return slidePower;
     }
 }

@@ -251,10 +251,8 @@ public class RedLeft extends LinearOpMode {
         if (slidePower < -1) {
             slidePower = -1;
         }
-        if (Math.abs(slidePower)>0.1) {
-            slidePower = 0;
-        }
-        
+
+
         return slidePower;
     }
 }

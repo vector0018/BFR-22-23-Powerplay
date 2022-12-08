@@ -231,13 +231,16 @@ public class StatesBlueLeft extends LinearOpMode {
         else if (pipelineValue < 145 && pipelineValue >138){
             // color pink
         }
+
+        slideMotor.setPower(0);
+        sleep(100);
     }
 
 
 
     //calculate slide power
     private double moveSlide (double currentPosition , double targetPosition) {
-        double Kp = 0.2;
+        double Kp = 0.5;
         double positionError;
         double slidePower;
 
@@ -262,6 +265,7 @@ public class StatesBlueLeft extends LinearOpMode {
         if (slidePower < -1) {
             slidePower = -1;
         }
+
         return slidePower;
     }
 }
