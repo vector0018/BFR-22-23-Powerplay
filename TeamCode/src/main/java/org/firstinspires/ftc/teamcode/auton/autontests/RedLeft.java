@@ -252,7 +252,6 @@ public class RedLeft extends LinearOpMode {
             slidePower = -1;
         }
 
-
         return slidePower;
     }
 }

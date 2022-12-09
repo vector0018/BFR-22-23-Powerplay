@@ -264,7 +264,7 @@ public class StatesBlueRight extends LinearOpMode {
         if (slidePower < -1) {
             slidePower = -1;
         }
-        
+
         return slidePower;
     }
 }

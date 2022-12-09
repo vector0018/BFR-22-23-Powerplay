@@ -92,19 +92,19 @@ public class StatesRedLeft extends LinearOpMode {
                 .back(8)
                 .build();
         Trajectory finishH3 = drive.trajectoryBuilder(backForH3.end())
-                .strafeRight(15)
+                .strafeRight(13)
                 .build();
         Trajectory beginToStack = drive.trajectoryBuilder(finishH3.end())
                 .strafeLeft(15)
                 .build();
         Trajectory finishStack = drive.trajectoryBuilder(beginToStack.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
-                .forward(20)
+                .forward(18)
                 .build();
         Trajectory backTowardsL3 = drive.trajectoryBuilder(finishStack.end())
                 .back(19)
                 .build();
         Trajectory finishL3 = drive.trajectoryBuilder(backTowardsL3.end())
-                .strafeLeft(15)
+                .strafeLeft(17)
                 .build();
         Trajectory backAwayFromL3 = drive.trajectoryBuilder(finishL3.end())
                 .back(2)
@@ -113,10 +113,10 @@ public class StatesRedLeft extends LinearOpMode {
                 .strafeLeft(15)
                 .build();
         Trajectory zone1 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
-                .strafeRight(28)
+                .strafeLeft(28)
                 .build();
         Trajectory zone3 = drive.trajectoryBuilder(strafeToParkPos.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
-                .strafeLeft(28)
+                .strafeRight(28)
                 .build();
         waitForStart();
 

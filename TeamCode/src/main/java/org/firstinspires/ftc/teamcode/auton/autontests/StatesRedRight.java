@@ -25,8 +25,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-@Autonomous(name = "Blue left States")
-public class StatesBlueLeft extends LinearOpMode {
+@Autonomous(name = "Red Right States")
+public class StatesRedRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // listing the things
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -94,31 +94,31 @@ public class StatesBlueLeft extends LinearOpMode {
 //                .build();
 //        Trajectory finishH2 = drive.trajectoryBuilder(backForH2.end())
         Trajectory finishH2 = drive.trajectoryBuilder(forwardToH2.end())
-                .strafeRight(15)
-                .build();
-        Trajectory beginToStack = drive.trajectoryBuilder(finishH2.end())
                 .strafeLeft(15)
                 .build();
-        Trajectory finishStack = drive.trajectoryBuilder(beginToStack.end().plus(new Pose2d(0, 0, Math.toRadians(90))), false)
+        Trajectory beginToStack = drive.trajectoryBuilder(finishH2.end())
+                .strafeRight(15)
+                .build();
+        Trajectory finishStack = drive.trajectoryBuilder(beginToStack.end().plus(new Pose2d(0, 0, Math.toRadians(-90))), false)
                 .forward(20)
                 .build();
         Trajectory backTowardsH1 = drive.trajectoryBuilder(finishStack.end())
-                .back(46)
+                .back(43)
                 .build();
         Trajectory finishH1 = drive.trajectoryBuilder(backTowardsH1.end().plus(new Pose2d(0,0,Math.toRadians(180))), false)
-                .strafeRight(15)
+                .strafeLeft(15)
                 .build();
         Trajectory backAwayFromH1 = drive.trajectoryBuilder(finishH1.end())
-                .back(2)
+                .back(0.5)
                 .build();
-        Trajectory backToZone3 = drive.trajectoryBuilder(backAwayFromH1.end().plus(new Pose2d(0,0,Math.toRadians(90))), false)
+        Trajectory backToZone3 = drive.trajectoryBuilder(backAwayFromH1.end().plus(new Pose2d(0,0,Math.toRadians(-90))), false)
                 .back(12)
                 .build();
-        Trajectory zone1 = drive.trajectoryBuilder(backToZone3.end())
-                .strafeLeft(56)
+        Trajectory zone3 = drive.trajectoryBuilder(backToZone3.end())
+                .strafeRight(56)
                 .build();
         Trajectory zone2 = drive.trajectoryBuilder(backToZone3.end())
-                .strafeLeft(28)
+                .strafeRight(28)
                 .build();
         waitForStart();
 
@@ -163,7 +163,7 @@ public class StatesBlueLeft extends LinearOpMode {
         // Begins to stack
         drive.followTrajectory(beginToStack);
 
-        drive.turn(Math.toRadians(90));
+        drive.turn(Math.toRadians(-90));
 
         // Closes the claw a bit to avoid hitting the claw
         rightClaw.setPosition(.8);
@@ -211,7 +211,7 @@ public class StatesBlueLeft extends LinearOpMode {
         rightClaw.setPosition(.8);
 
         drive.followTrajectory(backAwayFromH1);
-        drive.turn(Math.toRadians(90));
+        drive.turn(Math.toRadians(-90));
         drive.followTrajectory(backToZone3);
 
         // Lowers the slide for the cone
@@ -226,7 +226,6 @@ public class StatesBlueLeft extends LinearOpMode {
         // park stuff
         if  (pipelineValue <= 138){
             // color green
-            drive.followTrajectory(zone1);
         }
         else if (pipelineValue >= 145){
             // color Purple
@@ -234,6 +233,7 @@ public class StatesBlueLeft extends LinearOpMode {
         }
         else if (pipelineValue < 145 && pipelineValue >138){
             // color pink
+            drive.followTrajectory(zone3);
         }
 
         slideMotor.setPower(0);
