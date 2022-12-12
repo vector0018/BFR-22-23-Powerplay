@@ -106,10 +106,10 @@ public class StatesRedRight extends LinearOpMode {
                 .back(43)
                 .build();
         Trajectory finishH1 = drive.trajectoryBuilder(backTowardsH1.end().plus(new Pose2d(0,0,Math.toRadians(180))), false)
-                .strafeLeft(15)
+                .strafeLeft(16.5)
                 .build();
         Trajectory backAwayFromH1 = drive.trajectoryBuilder(finishH1.end())
-                .back(0.5)
+                .back(0.25)
                 .build();
         Trajectory backToZone3 = drive.trajectoryBuilder(backAwayFromH1.end().plus(new Pose2d(0,0,Math.toRadians(-90))), false)
                 .back(12)
@@ -227,11 +227,11 @@ public class StatesRedRight extends LinearOpMode {
         if  (pipelineValue <= 138){
             // color green
         }
-        else if (pipelineValue >= 145){
+        else if (pipelineValue >= 154){
             // color Purple
             drive.followTrajectory(zone2);
         }
-        else if (pipelineValue < 145 && pipelineValue >138){
+        else if (pipelineValue < 154 && pipelineValue >138){
             // color pink
             drive.followTrajectory(zone3);
         }

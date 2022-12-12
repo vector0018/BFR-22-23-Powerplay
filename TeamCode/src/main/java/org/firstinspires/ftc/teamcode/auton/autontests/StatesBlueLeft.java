@@ -228,11 +228,11 @@ public class StatesBlueLeft extends LinearOpMode {
             // color green
             drive.followTrajectory(zone1);
         }
-        else if (pipelineValue >= 145){
+        else if (pipelineValue >= 153){
             // color Purple
             drive.followTrajectory(zone2);
         }
-        else if (pipelineValue < 145 && pipelineValue >138){
+        else if (pipelineValue < 153 && pipelineValue >138){
             // color pink
         }
 
